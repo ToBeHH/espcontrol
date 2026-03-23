@@ -1,0 +1,153 @@
+# =============================================================================
+# SENSORS - Dynamic HA entity subscriptions
+# =============================================================================
+# On boot, reads configured entity_ids from text components and dynamically
+# subscribes to Home Assistant state updates. Callbacks update LVGL widgets.
+# =============================================================================
+
+globals:
+  - id: indoor_temp
+    type: float
+    initial_value: 'NAN'
+  - id: outdoor_temp
+    type: float
+    initial_value: 'NAN'
+
+esphome:
+  on_boot:
+    - priority: -100
+      then:
+        - lambda: |-
+            // --- Button 1: entity state subscription ---
+            std::string entity_id = id(button_1_entity).state;
+            if (!entity_id.empty()) {
+              // Set custom label if provided, otherwise subscribe to friendly_name
+              std::string custom_label = id(button_1_label).state;
+              if (!custom_label.empty()) {
+                lv_label_set_text(id(button_1_text_label), custom_label.c_str());
+              } else {
+                api::global_api_server->subscribe_home_assistant_state(
+                  entity_id, std::string("friendly_name"),
+                  [](const std::string &name) {
+                    lv_label_set_text(id(button_1_text_label), name.c_str());
+                  }
+                );
+              }
+
+              // Set icon based on selection or auto-detect from entity domain
+              std::string icon_choice = id(button_1_icon).state;
+              if (icon_choice == "Auto") {
+                std::string domain = entity_id.substr(0, entity_id.find('.'));
+                const char *icon_text = "\U000F0493"; // default: cog
+                if (domain == "light") icon_text = "\U000F0335";       // lightbulb
+                else if (domain == "switch") icon_text = "\U000F0654"; // power-plug
+                else if (domain == "fan") icon_text = "\U000F0210";    // fan
+                else if (domain == "lock") icon_text = "\U000F033E";   // lock
+                else if (domain == "cover") icon_text = "\U000F1011";  // blinds-open
+                else if (domain == "climate") icon_text = "\U000F0D43"; // air-filter
+                else if (domain == "media_player") icon_text = "\U000F04C3"; // speaker
+                else if (domain == "camera") icon_text = "\U000F0213"; // camera
+                else if (domain == "binary_sensor") icon_text = "\U000F0D91"; // motion-sensor
+                lv_label_set_text(id(button_1_icon_label), icon_text);
+              } else {
+                const char *icon_text = "\U000F0493"; // default: cog
+                if (icon_choice == "Lightbulb") icon_text = "\U000F0335";
+                else if (icon_choice == "Power Plug") icon_text = "\U000F0654";
+                else if (icon_choice == "Fan") icon_text = "\U000F0210";
+                else if (icon_choice == "Lock") icon_text = "\U000F033E";
+                else if (icon_choice == "Garage") icon_text = "\U000F0372";
+                else if (icon_choice == "Blinds Open") icon_text = "\U000F1011";
+                else if (icon_choice == "Blinds Closed") icon_text = "\U000F00AC";
+                else if (icon_choice == "Thermometer") icon_text = "\U000F050F";
+                else if (icon_choice == "Speaker") icon_text = "\U000F04C3";
+                else if (icon_choice == "Television") icon_text = "\U000F0502";
+                else if (icon_choice == "Camera") icon_text = "\U000F0213";
+                else if (icon_choice == "Motion Sensor") icon_text = "\U000F0D91";
+                else if (icon_choice == "Door") icon_text = "\U000F081A";
+                else if (icon_choice == "Window") icon_text = "\U000F111C";
+                else if (icon_choice == "Water Heater") icon_text = "\U000F0F92";
+                else if (icon_choice == "Air Conditioner") icon_text = "\U000F0D43";
+                else if (icon_choice == "Battery") icon_text = "\U000F089E";
+                else if (icon_choice == "LED Strip") icon_text = "\U000F07D6";
+                else if (icon_choice == "Power") icon_text = "\U000F0425";
+                lv_label_set_text(id(button_1_icon_label), icon_text);
+              }
+
+              // Subscribe to entity state for checked/unchecked
+              api::global_api_server->subscribe_home_assistant_state(
+                entity_id, {},
+                [](const std::string &state) {
+                  if (state == "on" || state == "open" || state == "playing" ||
+                      state == "home" || state == "unlocked") {
+                    lv_obj_add_state(id(button_1), LV_STATE_CHECKED);
+                  } else {
+                    lv_obj_clear_state(id(button_1), LV_STATE_CHECKED);
+                  }
+                }
+              );
+            }
+
+            // --- Indoor temperature subscription ---
+            std::string indoor_id = id(indoor_temp_entity).state;
+            if (!indoor_id.empty()) {
+              api::global_api_server->subscribe_home_assistant_state(
+                indoor_id, {},
+                [](const std::string &state) {
+                  char *end;
+                  float val = strtof(state.c_str(), &end);
+                  if (end != state.c_str()) {
+                    id(indoor_temp) = val;
+                    float outdoor = id(outdoor_temp);
+                    if (std::isnan(outdoor)) {
+                      char buf[16];
+                      snprintf(buf, sizeof(buf), "%.0f°", val);
+                      lv_label_set_text(id(temperatures), buf);
+                    } else {
+                      char buf[16];
+                      snprintf(buf, sizeof(buf), "%.0f° / %.0f°", outdoor, val);
+                      lv_label_set_text(id(temperatures), buf);
+                    }
+                  }
+                }
+              );
+            }
+
+            // --- Outdoor temperature subscription ---
+            std::string outdoor_id = id(outdoor_temp_entity).state;
+            if (!outdoor_id.empty()) {
+              api::global_api_server->subscribe_home_assistant_state(
+                outdoor_id, {},
+                [](const std::string &state) {
+                  char *end;
+                  float val = strtof(state.c_str(), &end);
+                  if (end != state.c_str()) {
+                    id(outdoor_temp) = val;
+                    float indoor = id(indoor_temp);
+                    if (std::isnan(indoor)) {
+                      char buf[16];
+                      snprintf(buf, sizeof(buf), "%.0f°", val);
+                      lv_label_set_text(id(temperatures), buf);
+                    } else {
+                      char buf[16];
+                      snprintf(buf, sizeof(buf), "%.0f° / %.0f°", val, indoor);
+                      lv_label_set_text(id(temperatures), buf);
+                    }
+                  }
+                }
+              );
+            }
+
+            // --- Presence sensor subscription ---
+            std::string presence_id = id(presence_sensor_entity).state;
+            if (!presence_id.empty()) {
+              api::global_api_server->subscribe_home_assistant_state(
+                presence_id, {},
+                [](const std::string &state) {
+                  if (state == "on") {
+                    lv_display_trigger_activity(NULL);
+                    id(display_backlight).turn_on().perform();
+                    id(screensaver_idle_check).execute();
+                  }
+                }
+              );
+            }

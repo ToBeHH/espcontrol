@@ -1,0 +1,41 @@
+# =============================================================================
+# PACKAGES - ESPHome include manifest
+# =============================================================================
+# Load order follows dependencies: device and assets first, then config,
+# addons, and screens. Loading screen must be the first page so LVGL shows
+# it at startup. Main page (lvgl.yaml) is included after setup screens.
+# =============================================================================
+
+packages:
+  # ---------------------------------------------------------------------------
+  # Device, assets, and LVGL base
+  # ---------------------------------------------------------------------------
+  device:          !include device/device.yaml
+  fonts:           !include assets/fonts.yaml
+  icons:           !include assets/icons.yaml
+  lvgl_base:       !include device/lvgl_base.yaml
+  button_theme:    !include theme/button.yaml
+  # ---------------------------------------------------------------------------
+  # Configuration (text/select/number components for web UI)
+  # ---------------------------------------------------------------------------
+  button_config:   !include config/button.yaml
+  display_config:  !include config/display.yaml
+  # ---------------------------------------------------------------------------
+  # Addons
+  # ---------------------------------------------------------------------------
+  connectivity:    !include addon/connectivity.yaml
+  time_sync:       !include addon/time.yaml
+  backlight:       !include addon/backlight.yaml
+  network:         !include addon/network.yaml
+  fw_update:       !include addon/firmware_update.yaml
+  # ---------------------------------------------------------------------------
+  # Screens (loading must be first page for LVGL startup)
+  # ---------------------------------------------------------------------------
+  screen_loading:  !include device/screen_loading.yaml
+  screen_wifi:     !include device/screen_wifi_setup.yaml
+  screen_setup:    !include device/screen_button_setup.yaml
+  # ---------------------------------------------------------------------------
+  # Main page and dynamic sensor subscriptions (after setup screens)
+  # ---------------------------------------------------------------------------
+  lvgl:            !include device/lvgl.yaml
+  sensors:         !include device/sensors.yaml

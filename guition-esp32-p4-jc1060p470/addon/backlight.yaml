@@ -1,0 +1,39 @@
+# =============================================================================
+# BACKLIGHT - Screensaver and setup screen dim
+# =============================================================================
+# Two screensaver mechanisms that coexist:
+#   1. Idle timer: configurable timeout (default 5 min), sleeps after inactivity
+#   2. Presence sensor: optional HA binary_sensor, wakes display on detection
+# Setup screen dim: dims to 50% after 120s on static setup pages.
+# Touch wake is handled by the touchscreen on_touch in device.yaml.
+# =============================================================================
+
+script:
+  # Screensaver idle timer (restartable)
+  - id: screensaver_idle_check
+    mode: restart
+    then:
+      - delay: !lambda 'return (int)(id(screensaver_timeout).state * 1000);'
+      - light.turn_off: display_backlight
+      - lvgl.pause:
+          show_snow: true
+
+  # Setup screen burn-in protection
+  - id: setup_screen_dim
+    mode: restart
+    then:
+      - delay: 120s
+      - light.turn_on:
+          id: display_backlight
+          brightness: 50%
+          transition_length: 2s
+
+  # Wake from screensaver
+  - id: screensaver_wake
+    mode: restart
+    then:
+      - lvgl.resume:
+      - light.turn_on:
+          id: display_backlight
+          brightness: 90%
+      - script.execute: screensaver_idle_check

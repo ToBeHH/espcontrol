@@ -1,0 +1,70 @@
+lvgl:
+  top_layer:
+    widgets:
+
+      # Temperature
+      - label:
+          text: "-° / -°"
+          id: temperatures
+          text_font: clockbar_font
+          align: top_left
+          x: 8
+          y: 8
+          text_color: 0xFFFFFF
+
+      # Clock
+      - label:
+          text: "--:--"
+          id: display_time
+          text_font: clockbar_font
+          align: top_mid
+          x: 0
+          y: 8
+          text_align: center
+          text_color: 0xFFFFFF
+
+  pages:
+    - id: main_page
+      layout:
+        type: flex
+        flex_flow: column_wrap
+        pad_row: 10
+        pad_column: 10
+      width: 100%
+      bg_color: Black
+      bg_opa: cover
+      pad_top: 42
+      pad_bottom: 5
+      pad_left: 5
+      pad_right: 5
+
+      widgets:
+
+        # Configurable Button
+        - button:
+            height: $button_height
+            width: $button_width
+            checkable: true
+            id: button_1
+            styles: control
+            widgets:
+              - label:
+                  text_font: $icon_font
+                  align: top_left
+                  id: button_1_icon_label
+                  text: $icon_cog
+              - label:
+                  align: bottom_left
+                  id: button_1_text_label
+                  text: "Configure"
+            on_press:
+              - if:
+                  condition:
+                    lambda: 'return !id(button_1_entity).state.empty();'
+                  then:
+                    - homeassistant.action:
+                        action: homeassistant.toggle
+                        data_template:
+                          entity_id: "{{ entity_id }}"
+                        variables:
+                          entity_id: !lambda 'return id(button_1_entity).state;'

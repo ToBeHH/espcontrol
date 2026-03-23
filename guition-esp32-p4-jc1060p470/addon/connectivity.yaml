@@ -1,0 +1,42 @@
+# =============================================================================
+# CONNECTIVITY - WiFi, captive portal, page navigation
+# =============================================================================
+# Handles network connectivity and navigates between screens based on
+# connection state using lvgl.page.show.
+# =============================================================================
+
+captive_portal:
+
+wifi:
+  reboot_timeout: 0s
+  ap: {}
+  on_connect:
+    - script.stop: setup_screen_dim
+    - lambda: |-
+        lv_bar_set_value(id(loading_progress_bar), 100, LV_ANIM_OFF);
+        lv_label_set_text(id(loading_status_label), "Connected");
+    - delay: 800ms
+    - if:
+        condition:
+          lambda: 'return !id(button_1_entity).state.empty();'
+        then:
+          - lvgl.page.show: main_page
+          - script.execute: screensaver_idle_check
+        else:
+          - lambda: |-
+              auto ips = wifi::global_wifi_component->get_ip_addresses();
+              if (!ips.empty()) {
+                char ip_buf[esphome::network::IP_ADDRESS_BUFFER_SIZE];
+                ips[0].str_to(ip_buf);
+                std::string url = "http://" + std::string(ip_buf);
+                lv_label_set_text(id(setup_ip_label), url.c_str());
+              }
+          - lvgl.page.show: button_setup_page
+          - script.execute: setup_screen_dim
+  on_disconnect:
+    - if:
+        condition:
+          lambda: 'return !id(boot_grace_period);'
+        then:
+          - lvgl.page.show: wifi_setup_page
+          - script.execute: setup_screen_dim

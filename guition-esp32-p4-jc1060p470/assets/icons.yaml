@@ -1,0 +1,47 @@
+# =============================================================================
+# ICONS - Material Design Icons for buttons and setup screens
+# =============================================================================
+# http://materialdesignicons.com/cdn/7.4.47/
+# Two icon fonts: 48px for button icons, 64px for setup screen icons.
+# =============================================================================
+
+font:
+  # Button icons (48px)
+  - file: 'https://github.com/Templarian/MaterialDesign-Webfont/raw/v7.4.47/fonts/materialdesignicons-webfont.ttf'
+    id: icon_font
+    size: 48
+    bpp: 8
+    glyphs:
+      - "\U000F0335"  # mdi-lightbulb
+      - "\U000F0654"  # mdi-power-plug
+      - "\U000F0210"  # mdi-fan
+      - "\U000F033E"  # mdi-lock
+      - "\U000F0372"  # mdi-garage
+      - "\U000F1011"  # mdi-blinds-open
+      - "\U000F00AC"  # mdi-blinds-closed
+      - "\U000F050F"  # mdi-thermometer
+      - "\U000F04C3"  # mdi-speaker
+      - "\U000F0502"  # mdi-television
+      - "\U000F0213"  # mdi-camera
+      - "\U000F0D91"  # mdi-motion-sensor
+      - "\U000F081A"  # mdi-door
+      - "\U000F111C"  # mdi-window-open-variant
+      - "\U000F0F92"  # mdi-water-boiler
+      - "\U000F0D43"  # mdi-air-filter
+      - "\U000F089E"  # mdi-battery
+      - "\U000F07D6"  # mdi-led-strip
+      - "\U000F0425"  # mdi-power
+      - "\U000F0493"  # mdi-cog
+
+  # Setup screen icons (64px)
+  - file: 'https://github.com/Templarian/MaterialDesign-Webfont/raw/v7.4.47/fonts/materialdesignicons-webfont.ttf'
+    id: icon_font_setup
+    size: 64
+    bpp: 4
+    glyphs:
+      - "\U000F05A9"  # mdi-wifi
+      - "\U000F0493"  # mdi-cog
+
+substitutions:
+  icon_wifi: "\U000F05A9"
+  icon_cog: "\U000F0493"

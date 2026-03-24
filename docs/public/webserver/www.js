@@ -613,7 +613,14 @@
     var btn = document.createElement("button");
     btn.className = "sp-apply-btn";
     btn.textContent = "Apply Configuration";
-    btn.addEventListener("click", function () { postButtonPress("apply_configuration"); });
+    btn.addEventListener("click", function () {
+      if (document.activeElement && document.activeElement.blur) {
+        document.activeElement.blur();
+      }
+      btn.disabled = true;
+      btn.textContent = "Restarting\u2026";
+      setTimeout(function () { postButtonPress("apply_configuration"); }, 600);
+    });
     bar.appendChild(btn);
     var note = document.createElement("div");
     note.className = "sp-apply-note";
@@ -904,6 +911,11 @@
 
   function connectEvents() {
     var source = new EventSource("/events");
+
+    source.addEventListener("open", function () {
+      state.selectedSlot = -1;
+      orderReceived = false;
+    });
 
     source.addEventListener("state", function (e) {
       var d;

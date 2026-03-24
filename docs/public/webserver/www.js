@@ -312,7 +312,8 @@
 
     // Context menu
     ".sp-ctx-menu{position:fixed;z-index:200;background:#1e1e1e;border:1px solid #444;" +
-    "border-radius:8px;padding:4px 0;min-width:160px;box-shadow:0 4px 16px rgba(0,0,0,.5)}" +
+    "border-radius:8px;padding:4px 0;min-width:160px;box-shadow:0 4px 16px rgba(0,0,0,.5);" +
+    "font-family:Roboto,sans-serif}" +
     ".sp-ctx-item{display:flex;align-items:center;gap:10px;padding:8px 14px;" +
     "cursor:pointer;font-size:13px;color:#e0e0e0;transition:background .1s;white-space:nowrap}" +
     ".sp-ctx-item:hover{background:#3a3a3a}" +

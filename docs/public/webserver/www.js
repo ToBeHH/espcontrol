@@ -331,7 +331,7 @@
   };
 
   for (var i = 0; i < NUM_SLOTS; i++) {
-    state.buttons.push({ entity: "", label: "", icon: "Auto" });
+    state.buttons.push({ entity: "", label: "", icon: "Auto", sensor: "" });
   }
 
   var els = {};
@@ -1283,7 +1283,7 @@
       }
 
       // --- Per-button entity / label ---
-      var textMatch = id.match(/^text-button_(\d+)_(entity|label)$/);
+      var textMatch = id.match(/^text-button_(\d+)_(entity|label|sensor)$/);
       if (textMatch) {
         var slot = parseInt(textMatch[1], 10);
         var field = textMatch[2];
@@ -1291,7 +1291,8 @@
           state.buttons[slot - 1][field] = val;
           renderPreview();
           if (state.selectedSlot === slot && isSettingsFocused()) {
-            syncInput(document.getElementById(field === "entity" ? "sp-inp-entity" : "sp-inp-label"), val);
+            var inputId = field === "entity" ? "sp-inp-entity" : field === "label" ? "sp-inp-label" : "sp-inp-sensor";
+            syncInput(document.getElementById(inputId), val);
           } else {
             renderButtonSettings();
           }

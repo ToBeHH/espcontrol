@@ -24,32 +24,34 @@ esphome:
               esphome::text::Text *entity;
               esphome::text::Text *label;
               esphome::select::Select *icon;
+              esphome::text::Text *sensor;
               lv_obj_t *btn;
               lv_obj_t *icon_lbl;
               lv_obj_t *text_lbl;
+              lv_obj_t *sensor_lbl;
             };
 
             BtnSlot slots[] = {
-              { id(button_1_entity),  id(button_1_label),  id(button_1_icon),  id(button_1),  id(button_1_icon_label),  id(button_1_text_label) },
-              { id(button_2_entity),  id(button_2_label),  id(button_2_icon),  id(button_2),  id(button_2_icon_label),  id(button_2_text_label) },
-              { id(button_3_entity),  id(button_3_label),  id(button_3_icon),  id(button_3),  id(button_3_icon_label),  id(button_3_text_label) },
-              { id(button_4_entity),  id(button_4_label),  id(button_4_icon),  id(button_4),  id(button_4_icon_label),  id(button_4_text_label) },
-              { id(button_5_entity),  id(button_5_label),  id(button_5_icon),  id(button_5),  id(button_5_icon_label),  id(button_5_text_label) },
-              { id(button_6_entity),  id(button_6_label),  id(button_6_icon),  id(button_6),  id(button_6_icon_label),  id(button_6_text_label) },
-              { id(button_7_entity),  id(button_7_label),  id(button_7_icon),  id(button_7),  id(button_7_icon_label),  id(button_7_text_label) },
-              { id(button_8_entity),  id(button_8_label),  id(button_8_icon),  id(button_8),  id(button_8_icon_label),  id(button_8_text_label) },
-              { id(button_9_entity),  id(button_9_label),  id(button_9_icon),  id(button_9),  id(button_9_icon_label),  id(button_9_text_label) },
-              { id(button_10_entity), id(button_10_label), id(button_10_icon), id(button_10), id(button_10_icon_label), id(button_10_text_label) },
-              { id(button_11_entity), id(button_11_label), id(button_11_icon), id(button_11), id(button_11_icon_label), id(button_11_text_label) },
-              { id(button_12_entity), id(button_12_label), id(button_12_icon), id(button_12), id(button_12_icon_label), id(button_12_text_label) },
-              { id(button_13_entity), id(button_13_label), id(button_13_icon), id(button_13), id(button_13_icon_label), id(button_13_text_label) },
-              { id(button_14_entity), id(button_14_label), id(button_14_icon), id(button_14), id(button_14_icon_label), id(button_14_text_label) },
-              { id(button_15_entity), id(button_15_label), id(button_15_icon), id(button_15), id(button_15_icon_label), id(button_15_text_label) },
-              { id(button_16_entity), id(button_16_label), id(button_16_icon), id(button_16), id(button_16_icon_label), id(button_16_text_label) },
-              { id(button_17_entity), id(button_17_label), id(button_17_icon), id(button_17), id(button_17_icon_label), id(button_17_text_label) },
-              { id(button_18_entity), id(button_18_label), id(button_18_icon), id(button_18), id(button_18_icon_label), id(button_18_text_label) },
-              { id(button_19_entity), id(button_19_label), id(button_19_icon), id(button_19), id(button_19_icon_label), id(button_19_text_label) },
-              { id(button_20_entity), id(button_20_label), id(button_20_icon), id(button_20), id(button_20_icon_label), id(button_20_text_label) },
+              { id(button_1_entity),  id(button_1_label),  id(button_1_icon),  id(button_1_sensor),  id(button_1),  id(button_1_icon_label),  id(button_1_text_label),  id(button_1_sensor_label) },
+              { id(button_2_entity),  id(button_2_label),  id(button_2_icon),  id(button_2_sensor),  id(button_2),  id(button_2_icon_label),  id(button_2_text_label),  id(button_2_sensor_label) },
+              { id(button_3_entity),  id(button_3_label),  id(button_3_icon),  id(button_3_sensor),  id(button_3),  id(button_3_icon_label),  id(button_3_text_label),  id(button_3_sensor_label) },
+              { id(button_4_entity),  id(button_4_label),  id(button_4_icon),  id(button_4_sensor),  id(button_4),  id(button_4_icon_label),  id(button_4_text_label),  id(button_4_sensor_label) },
+              { id(button_5_entity),  id(button_5_label),  id(button_5_icon),  id(button_5_sensor),  id(button_5),  id(button_5_icon_label),  id(button_5_text_label),  id(button_5_sensor_label) },
+              { id(button_6_entity),  id(button_6_label),  id(button_6_icon),  id(button_6_sensor),  id(button_6),  id(button_6_icon_label),  id(button_6_text_label),  id(button_6_sensor_label) },
+              { id(button_7_entity),  id(button_7_label),  id(button_7_icon),  id(button_7_sensor),  id(button_7),  id(button_7_icon_label),  id(button_7_text_label),  id(button_7_sensor_label) },
+              { id(button_8_entity),  id(button_8_label),  id(button_8_icon),  id(button_8_sensor),  id(button_8),  id(button_8_icon_label),  id(button_8_text_label),  id(button_8_sensor_label) },
+              { id(button_9_entity),  id(button_9_label),  id(button_9_icon),  id(button_9_sensor),  id(button_9),  id(button_9_icon_label),  id(button_9_text_label),  id(button_9_sensor_label) },
+              { id(button_10_entity), id(button_10_label), id(button_10_icon), id(button_10_sensor), id(button_10), id(button_10_icon_label), id(button_10_text_label), id(button_10_sensor_label) },
+              { id(button_11_entity), id(button_11_label), id(button_11_icon), id(button_11_sensor), id(button_11), id(button_11_icon_label), id(button_11_text_label), id(button_11_sensor_label) },
+              { id(button_12_entity), id(button_12_label), id(button_12_icon), id(button_12_sensor), id(button_12), id(button_12_icon_label), id(button_12_text_label), id(button_12_sensor_label) },
+              { id(button_13_entity), id(button_13_label), id(button_13_icon), id(button_13_sensor), id(button_13), id(button_13_icon_label), id(button_13_text_label), id(button_13_sensor_label) },
+              { id(button_14_entity), id(button_14_label), id(button_14_icon), id(button_14_sensor), id(button_14), id(button_14_icon_label), id(button_14_text_label), id(button_14_sensor_label) },
+              { id(button_15_entity), id(button_15_label), id(button_15_icon), id(button_15_sensor), id(button_15), id(button_15_icon_label), id(button_15_text_label), id(button_15_sensor_label) },
+              { id(button_16_entity), id(button_16_label), id(button_16_icon), id(button_16_sensor), id(button_16), id(button_16_icon_label), id(button_16_text_label), id(button_16_sensor_label) },
+              { id(button_17_entity), id(button_17_label), id(button_17_icon), id(button_17_sensor), id(button_17), id(button_17_icon_label), id(button_17_text_label), id(button_17_sensor_label) },
+              { id(button_18_entity), id(button_18_label), id(button_18_icon), id(button_18_sensor), id(button_18), id(button_18_icon_label), id(button_18_text_label), id(button_18_sensor_label) },
+              { id(button_19_entity), id(button_19_label), id(button_19_icon), id(button_19_sensor), id(button_19), id(button_19_icon_label), id(button_19_text_label), id(button_19_sensor_label) },
+              { id(button_20_entity), id(button_20_label), id(button_20_icon), id(button_20_sensor), id(button_20), id(button_20_icon_label), id(button_20_text_label), id(button_20_sensor_label) },
             };
             constexpr int NUM_SLOTS = 20;
 
@@ -184,6 +186,8 @@ esphome:
               "\U000F111C",  // 99: Window
             };
 
+            static bool has_sensor[NUM_SLOTS] = {};
+
             int pos = 0;
             for (int idx : order) {
               auto &s = slots[idx - 1];
@@ -199,6 +203,10 @@ esphome:
                 lv_obj_set_style_bg_color(s.btn, lv_color_hex(off_val),
                   static_cast<lv_style_selector_t>(LV_PART_MAIN) | static_cast<lv_style_selector_t>(LV_STATE_DEFAULT));
               }
+
+              // Track whether this slot has a sensor-when-on entity
+              std::string sensor_id = s.sensor->state;
+              has_sensor[idx - 1] = !sensor_id.empty();
 
               // Subscribe to HA entity state
               std::string entity_id = s.entity->state;
@@ -234,19 +242,49 @@ esphome:
                 }
                 lv_label_set_text(icon_lbl, icon_codepoints[icon_idx]);
 
-                // Checked state subscription
+                // Checked state subscription (with icon/sensor swap when sensor configured)
                 lv_obj_t *btn_ptr = s.btn;
+                lv_obj_t *sensor_lbl = s.sensor_lbl;
+                bool *slot_has_sensor = &has_sensor[idx - 1];
                 api::global_api_server->subscribe_home_assistant_state(
                   entity_id, {},
-                  std::function<void(const std::string &)>([btn_ptr](const std::string &state) {
-                    if (state == "on" || state == "open" || state == "playing" ||
-                        state == "home" || state == "unlocked") {
+                  std::function<void(const std::string &)>([btn_ptr, icon_lbl, sensor_lbl, slot_has_sensor](const std::string &state) {
+                    bool is_on = state == "on" || state == "open" || state == "playing" ||
+                                 state == "home" || state == "unlocked";
+                    if (is_on) {
                       lv_obj_add_state(btn_ptr, LV_STATE_CHECKED);
                     } else {
                       lv_obj_clear_state(btn_ptr, LV_STATE_CHECKED);
                     }
+                    if (*slot_has_sensor) {
+                      if (is_on) {
+                        lv_obj_add_flag(icon_lbl, LV_OBJ_FLAG_HIDDEN);
+                        lv_obj_clear_flag(sensor_lbl, LV_OBJ_FLAG_HIDDEN);
+                      } else {
+                        lv_obj_clear_flag(icon_lbl, LV_OBJ_FLAG_HIDDEN);
+                        lv_obj_add_flag(sensor_lbl, LV_OBJ_FLAG_HIDDEN);
+                      }
+                    }
                   })
                 );
+
+                // Sensor value subscription
+                if (has_sensor[idx - 1]) {
+                  api::global_api_server->subscribe_home_assistant_state(
+                    sensor_id, {},
+                    std::function<void(const std::string &)>([sensor_lbl](const std::string &state) {
+                      char *end;
+                      float val = strtof(state.c_str(), &end);
+                      if (end != state.c_str()) {
+                        char buf[16];
+                        snprintf(buf, sizeof(buf), "%.0f", val);
+                        lv_label_set_text(sensor_lbl, buf);
+                      } else {
+                        lv_label_set_text(sensor_lbl, state.c_str());
+                      }
+                    })
+                  );
+                }
               }
             }
 

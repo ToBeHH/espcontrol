@@ -14,6 +14,12 @@ esphome:
   project:
     name: jtenniswood.espcontrol
     version: "${firmware_version}"
+  on_boot:
+    priority: 200
+    then:
+      - text_sensor.template.publish:
+          id: firmware_version_sensor
+          state: "${firmware_version}"
 
 globals:
   - id: update_check_counter
@@ -88,7 +94,7 @@ text_sensor:
     id: firmware_version_sensor
     entity_category: diagnostic
     icon: "mdi:tag"
-    update_interval: 60s
+    update_interval: never
     lambda: 'return {"${firmware_version}"};'
     web_server:
       sorting_group_id: sg_firmware

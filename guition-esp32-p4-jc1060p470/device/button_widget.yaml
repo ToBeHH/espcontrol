@@ -11,6 +11,12 @@ button:
         id: button_${num}_icon_label
         text: $icon_cog
     - label:
+        text_font: statistics_font
+        align: top_left
+        id: button_${num}_sensor_label
+        text: ""
+        hidden: true
+    - label:
         align: bottom_left
         id: button_${num}_text_label
         text: "Configure"

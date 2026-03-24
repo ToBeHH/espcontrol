@@ -332,6 +332,16 @@
     connectEvents();
     updateClock();
     setInterval(updateClock, 30000);
+
+    // Diagnostic: probe different URL formats
+    ["button_order", "Button Order", "Button%20Order"].forEach(function (id) {
+      fetch("/text/" + id).then(function (r) {
+        console.log("[PROBE] GET /text/" + id + " →", r.status);
+      }).catch(function (e) { console.log("[PROBE] GET /text/" + id + " → error", e); });
+    });
+    fetch("/text").then(function (r) {
+      return r.text().then(function (t) { console.log("[PROBE] GET /text →", r.status, t.substring(0, 500)); });
+    }).catch(function (e) { console.log("[PROBE] GET /text → error", e); });
   }
 
   // ── Build UI ─────────────────────────────────────────────────────────

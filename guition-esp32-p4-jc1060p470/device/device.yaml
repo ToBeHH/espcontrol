@@ -12,7 +12,6 @@ esp32:
       disable_vfs_support_select: false
       disable_vfs_support_dir: false
     sdkconfig_options:
-      CONFIG_SPIRAM_XIP_FROM_PSRAM: "y"   # Stop screen flashing during OTA
       CONFIG_SDMMC_HOST_DEFAULT: "y"
 
 # Esphome

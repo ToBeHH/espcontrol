@@ -201,28 +201,6 @@
     ".sp-section-title{font-size:13px;font-weight:500;color:#888;" +
     "margin:16px 0 8px;text-transform:uppercase;letter-spacing:0.5px}" +
 
-    // Button list
-    ".sp-list{list-style:none;margin:0;padding:0}" +
-    ".sp-list-item{display:flex;align-items:center;flex-wrap:wrap;padding:10px 12px;" +
-    "background:#1e1e1e;border-radius:6px;margin-bottom:6px;cursor:pointer;" +
-    "border:1px solid #2a2a2a;transition:all .15s}" +
-    ".sp-list-item:hover{border-color:#444}" +
-    ".sp-list-item.sp-list-selected{border-color:#03a9f4;background:#1a2a3a}" +
-    ".sp-list-item.sp-dragging{opacity:.4}" +
-    ".sp-list-handle{color:#555;margin-right:10px;cursor:grab;font-size:18px;line-height:1}" +
-    ".sp-list-handle:active{cursor:grabbing}" +
-    ".sp-list-info{flex:1;min-width:0}" +
-    ".sp-list-name{font-size:13px;font-weight:500;white-space:nowrap;" +
-    "overflow:hidden;text-overflow:ellipsis}" +
-    ".sp-list-entity{font-size:11px;color:#888;white-space:nowrap;" +
-    "overflow:hidden;text-overflow:ellipsis;margin-top:2px}" +
-    ".sp-list-icon{font-size:20px;margin-right:10px;width:24px;text-align:center;color:#aaa}" +
-    ".sp-drop-before{border-top:2px solid #03a9f4 !important}" +
-    ".sp-drop-after{border-bottom:2px solid #03a9f4 !important}" +
-
-    // Inline settings (expanded inside selected list item)
-    ".sp-list-expand{width:100%;padding-top:12px;cursor:default}" +
-
     // Settings page panels
     ".sp-panel{background:#1e1e1e;border-radius:8px;padding:16px;margin-top:12px;" +
     "border:1px solid #2a2a2a}" +
@@ -433,9 +411,9 @@
       .replace(/</g, "&lt;").replace(/>/g, "&gt;");
   }
 
-  function isExpandFocused() {
+  function isSettingsFocused() {
     var ae = document.activeElement;
-    return ae && ae.closest && ae.closest(".sp-list-expand");
+    return ae && els.buttonSettings && els.buttonSettings.contains(ae);
   }
 
   // ── Init ─────────────────────────────────────────────────────────────
@@ -458,7 +436,7 @@
     buildUI();
     setupPreviewDropZone();
     renderPreview();
-    renderButtonList();
+    renderButtonSettings();
     connectEvents();
     updateClock();
     setInterval(updateClock, 30000);
@@ -554,19 +532,10 @@
     hint.textContent = "tap a button to configure \u2022 tap + to add";
     page.appendChild(hint);
 
-    // Button list + settings
+    // Button settings (shown when a preview button is selected)
     var config = document.createElement("div");
     config.className = "sp-config";
-
-    var listTitle = document.createElement("div");
-    listTitle.className = "sp-section-title";
-    listTitle.textContent = "Buttons";
-    config.appendChild(listTitle);
-
-    var list = document.createElement("ul");
-    list.className = "sp-list";
-    config.appendChild(list);
-    els.buttonList = list;
+    els.buttonSettings = config;
 
     page.appendChild(config);
     page.appendChild(buildApplyBar());
@@ -907,7 +876,7 @@
         '<span class="sp-btn-label">' + escHtml(label) + "</span>";
       btn.addEventListener("click", function () {
         if (didDrag) { didDrag = false; return; }
-        selectButton(slot);
+        selectButton(state.selectedSlot === slot ? -1 : slot);
       });
       setupPreviewDrag(btn, idx);
       main.appendChild(btn);
@@ -922,123 +891,90 @@
     }
   }
 
-  // ── Button list rendering ───────────────────────────────────────────
+  // ── Button settings panel (shown below preview) ─────────────────────
 
-  function renderButtonList() {
-    var list = els.buttonList;
-    list.innerHTML = "";
+  function renderButtonSettings() {
+    var container = els.buttonSettings;
+    container.innerHTML = "";
 
-    if (state.order.length === 0) {
-      var empty = document.createElement("li");
-      empty.className = "sp-empty";
-      empty.textContent = 'No buttons yet \u2014 tap + on the screen to add one.';
-      list.appendChild(empty);
-      return;
-    }
+    if (state.selectedSlot < 1) return;
 
-    state.order.forEach(function (slot, pos) {
-      var b = state.buttons[slot - 1];
-      var iconName = resolveIcon(slot);
-      var name = btnDisplayName(slot);
-      var isSelected = state.selectedSlot === slot;
-
-      var item = document.createElement("li");
-      item.className = "sp-list-item" + (isSelected ? " sp-list-selected" : "");
-      item.dataset.pos = pos;
-      item.draggable = true;
-      item.innerHTML =
-        '<span class="sp-list-handle mdi mdi-drag"></span>' +
-        '<span class="sp-list-icon mdi mdi-' + iconName + '"></span>' +
-        '<div class="sp-list-info">' +
-        '<div class="sp-list-name">' + escHtml(name) + "</div>" +
-        (b.entity ? '<div class="sp-list-entity">' + escHtml(b.entity) + "</div>" : "") +
-        "</div>";
-
-      item.addEventListener("click", function (e) {
-        if (e.target.closest(".sp-list-handle") || e.target.closest(".sp-list-expand")) return;
-        selectButton(state.selectedSlot === slot ? -1 : slot);
-      });
-
-      if (isSelected) {
-        var expand = document.createElement("div");
-        expand.className = "sp-list-expand";
-        expand.innerHTML =
-          '<div class="sp-field">' +
-          '<label class="sp-field-label">Entity ID</label>' +
-          '<input class="sp-input" id="sp-inp-entity" type="text" ' +
-          'placeholder="e.g. light.kitchen" value="' + escAttr(b.entity) + '">' +
-          "</div>" +
-          '<div class="sp-field">' +
-          '<label class="sp-field-label">Label</label>' +
-          '<input class="sp-input" id="sp-inp-label" type="text" ' +
-          'placeholder="Optional custom label" value="' + escAttr(b.label) + '">' +
-          "</div>" +
-          '<div class="sp-field">' +
-          '<label class="sp-field-label">Icon</label>' +
-          '<div class="sp-icon-picker" id="sp-inp-icon-picker">' +
-          '<span class="sp-icon-picker-preview mdi mdi-' + (ICON_MAP[b.icon] || "cog") + '"></span>' +
-          '<input class="sp-icon-picker-input" id="sp-inp-icon" type="text" ' +
-          'placeholder="Search icons\u2026" value="' + escAttr(b.icon) + '" autocomplete="off">' +
-          '<div class="sp-icon-dropdown"></div>' +
-          '</div></div>' +
-          '<div class="sp-btn-row">' +
-          '<button class="sp-action-btn sp-delete-btn">Delete Button</button></div>';
-
-        expand.querySelector("#sp-inp-entity").addEventListener("blur", function () {
-          state.buttons[slot - 1].entity = this.value;
-          postText("button_" + slot + "_entity", this.value);
-          renderPreview();
-          updateListItemHeader(item, slot);
-        });
-        expand.querySelector("#sp-inp-entity").addEventListener("keydown", function (e) {
-          if (e.key === "Enter") this.blur();
-        });
-        expand.querySelector("#sp-inp-label").addEventListener("blur", function () {
-          state.buttons[slot - 1].label = this.value;
-          postText("button_" + slot + "_label", this.value);
-          renderPreview();
-          updateListItemHeader(item, slot);
-        });
-        expand.querySelector("#sp-inp-label").addEventListener("keydown", function (e) {
-          if (e.key === "Enter") this.blur();
-        });
-        initIconPicker(expand.querySelector("#sp-inp-icon-picker"), b.icon, slot, item);
-        expand.querySelector(".sp-delete-btn").addEventListener("click", function () {
-          deleteButton(slot);
-        });
-
-        item.appendChild(expand);
-      }
-
-      setupDrag(item, pos);
-      list.appendChild(item);
-    });
-  }
-
-  function updateListItemHeader(item, slot) {
-    var iconEl = item.querySelector(".sp-list-icon");
-    var nameEl = item.querySelector(".sp-list-name");
-    var entityEl = item.querySelector(".sp-list-entity");
+    var slot = state.selectedSlot;
     var b = state.buttons[slot - 1];
-    var iconName = resolveIcon(slot);
 
-    iconEl.className = "sp-list-icon mdi mdi-" + iconName;
-    nameEl.textContent = btnDisplayName(slot);
-    if (b.entity) {
-      if (!entityEl) {
-        entityEl = document.createElement("div");
-        entityEl.className = "sp-list-entity";
-        item.querySelector(".sp-list-info").appendChild(entityEl);
-      }
-      entityEl.textContent = b.entity;
-    } else if (entityEl) {
-      entityEl.remove();
-    }
+    var title = document.createElement("div");
+    title.className = "sp-section-title";
+    title.textContent = "Button Settings";
+    container.appendChild(title);
+
+    var panel = document.createElement("div");
+    panel.className = "sp-panel";
+
+    var ef = document.createElement("div");
+    ef.className = "sp-field";
+    ef.appendChild(fieldLabel("Entity ID"));
+    var entityInp = textInput("sp-inp-entity", b.entity, "e.g. light.kitchen");
+    ef.appendChild(entityInp);
+    panel.appendChild(ef);
+
+    entityInp.addEventListener("blur", function () {
+      state.buttons[slot - 1].entity = this.value;
+      postText("button_" + slot + "_entity", this.value);
+      renderPreview();
+    });
+    entityInp.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") this.blur();
+    });
+
+    var lf = document.createElement("div");
+    lf.className = "sp-field";
+    lf.appendChild(fieldLabel("Label"));
+    var labelInp = textInput("sp-inp-label", b.label, "Optional custom label");
+    lf.appendChild(labelInp);
+    panel.appendChild(lf);
+
+    labelInp.addEventListener("blur", function () {
+      state.buttons[slot - 1].label = this.value;
+      postText("button_" + slot + "_label", this.value);
+      renderPreview();
+    });
+    labelInp.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") this.blur();
+    });
+
+    var icf = document.createElement("div");
+    icf.className = "sp-field";
+    icf.appendChild(fieldLabel("Icon"));
+    var iconPicker = document.createElement("div");
+    iconPicker.className = "sp-icon-picker";
+    iconPicker.id = "sp-inp-icon-picker";
+    iconPicker.innerHTML =
+      '<span class="sp-icon-picker-preview mdi mdi-' + (ICON_MAP[b.icon] || "cog") + '"></span>' +
+      '<input class="sp-icon-picker-input" id="sp-inp-icon" type="text" ' +
+      'placeholder="Search icons\u2026" value="' + escAttr(b.icon) + '" autocomplete="off">' +
+      '<div class="sp-icon-dropdown"></div>';
+    icf.appendChild(iconPicker);
+    panel.appendChild(icf);
+
+    initIconPicker(iconPicker, b.icon, slot);
+
+    var btnRow = document.createElement("div");
+    btnRow.className = "sp-btn-row";
+    var delBtn = document.createElement("button");
+    delBtn.className = "sp-action-btn sp-delete-btn";
+    delBtn.textContent = "Delete Button";
+    delBtn.addEventListener("click", function () {
+      deleteButton(slot);
+    });
+    btnRow.appendChild(delBtn);
+    panel.appendChild(btnRow);
+
+    container.appendChild(panel);
   }
 
   // ── Searchable icon picker ──────────────────────────────────────────
 
-  function initIconPicker(picker, currentIcon, slot, listItem) {
+  function initIconPicker(picker, currentIcon, slot) {
     var input = picker.querySelector(".sp-icon-picker-input");
     var dropdown = picker.querySelector(".sp-icon-dropdown");
     var preview = picker.querySelector(".sp-icon-picker-preview");
@@ -1086,7 +1022,6 @@
       state.buttons[slot - 1].icon = opt;
       postSelect("button_" + slot + "_icon", opt);
       renderPreview();
-      updateListItemHeader(listItem, slot);
     }
 
     function openPicker() {
@@ -1148,54 +1083,6 @@
         input.blur();
       }
     });
-  }
-
-  // ── Drag and drop ───────────────────────────────────────────────────
-
-  function setupDrag(item, pos) {
-    item.addEventListener("dragstart", function (e) {
-      dragSrcPos = pos;
-      e.dataTransfer.effectAllowed = "move";
-      e.dataTransfer.setData("text/plain", String(pos));
-      setTimeout(function () { item.classList.add("sp-dragging"); }, 0);
-    });
-    item.addEventListener("dragend", function () {
-      item.classList.remove("sp-dragging");
-      clearDropIndicators();
-    });
-    item.addEventListener("dragover", function (e) {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = "move";
-      clearDropIndicators();
-      var rect = item.getBoundingClientRect();
-      if (e.clientY < rect.top + rect.height / 2) {
-        item.classList.add("sp-drop-before");
-      } else {
-        item.classList.add("sp-drop-after");
-      }
-    });
-    item.addEventListener("dragleave", function () {
-      item.classList.remove("sp-drop-before", "sp-drop-after");
-    });
-    item.addEventListener("drop", function (e) {
-      e.preventDefault();
-      clearDropIndicators();
-      if (dragSrcPos < 0) return;
-      var rect = item.getBoundingClientRect();
-      var toPos = e.clientY < rect.top + rect.height / 2 ? pos : pos + 1;
-      if (dragSrcPos < toPos) toPos--;
-      if (dragSrcPos === toPos) return;
-      var newOrder = state.order.slice();
-      var moved = newOrder.splice(dragSrcPos, 1)[0];
-      newOrder.splice(toPos, 0, moved);
-      postText("button_order", newOrder.join(","));
-      dragSrcPos = -1;
-    });
-  }
-
-  function clearDropIndicators() {
-    els.buttonList.querySelectorAll(".sp-drop-before,.sp-drop-after")
-      .forEach(function (el) { el.classList.remove("sp-drop-before", "sp-drop-after"); });
   }
 
   // ── Preview drag and drop ─────────────────────────────────────────
@@ -1273,7 +1160,7 @@
       newOrder.splice(toIdx, 0, moved);
       state.order = newOrder;
       renderPreview();
-      renderButtonList();
+      renderButtonSettings();
       postText("button_order", newOrder.join(","));
       dragSrcPos = -1;
     });
@@ -1306,7 +1193,7 @@
   function selectButton(slot) {
     state.selectedSlot = slot;
     renderPreview();
-    renderButtonList();
+    renderButtonSettings();
   }
 
   // ── Add / Delete buttons ────────────────────────────────────────────
@@ -1328,7 +1215,7 @@
     state.order = state.order.filter(function (s) { return s !== slot; });
     if (state.selectedSlot === slot) state.selectedSlot = -1;
     renderPreview();
-    renderButtonList();
+    renderButtonSettings();
     postText("button_order", state.order.join(","));
     postText("button_" + slot + "_entity", "");
     postText("button_" + slot + "_label", "");
@@ -1375,7 +1262,7 @@
         orderReceived = true;
         state.order = parseOrder(val);
         renderPreview();
-        renderButtonList();
+        renderButtonSettings();
         if (state.selectedSlot > 0 && state.order.indexOf(state.selectedSlot) === -1)
           state.selectedSlot = -1;
         return;
@@ -1403,10 +1290,10 @@
         if (slot >= 1 && slot <= NUM_SLOTS) {
           state.buttons[slot - 1][field] = val;
           renderPreview();
-          if (state.selectedSlot === slot && isExpandFocused()) {
+          if (state.selectedSlot === slot && isSettingsFocused()) {
             syncInput(document.getElementById(field === "entity" ? "sp-inp-entity" : "sp-inp-label"), val);
           } else {
-            renderButtonList();
+            renderButtonSettings();
           }
           scheduleMigration();
         }
@@ -1420,12 +1307,12 @@
         if (slot >= 1 && slot <= NUM_SLOTS) {
           state.buttons[slot - 1].icon = val;
           renderPreview();
-          if (state.selectedSlot === slot && isExpandFocused()) {
+          if (state.selectedSlot === slot && isSettingsFocused()) {
             syncInput(document.getElementById("sp-inp-icon"), val);
             var prev = document.querySelector(".sp-icon-picker-preview");
             if (prev) prev.className = "sp-icon-picker-preview mdi mdi-" + (ICON_MAP[val] || "cog");
           } else {
-            renderButtonList();
+            renderButtonSettings();
           }
         }
         return;
@@ -1508,7 +1395,7 @@
       if (autoOrder.length > 0) {
         state.order = autoOrder;
         renderPreview();
-        renderButtonList();
+        renderButtonSettings();
         postText("button_order", autoOrder.join(","));
       }
     }, 2000);

@@ -87,106 +87,194 @@ esphome:
             }
 
             static const char* icon_codepoints[] = {
-              "\U000F0493",  //  0: Auto (cog fallback)
-              "\U000F0004",  //  1: Account
-              "\U000F001B",  //  2: Air Conditioner
-              "\U000F0D44",  //  3: Air Purifier
-              "\U000F009E",  //  4: Alarm
-              "\U000F078F",  //  5: Alarm Light
-              "\U000F0079",  //  6: Battery
-              "\U000F02E3",  //  7: Bed
-              "\U000F009A",  //  8: Bell
-              "\U000F1A2C",  //  9: Blinds Closed
-              "\U000F1A2B",  // 10: Blinds Open
-              "\U000F00AF",  // 11: Bluetooth
-              "\U000F00E2",  // 12: Broom
-              "\U000F0100",  // 13: Camera
-              "\U000F0B6C",  // 14: Car Electric
-              "\U000F0118",  // 15: Cast
-              "\U000F07AE",  // 16: CCTV
-              "\U000F1797",  // 17: Ceiling Fan
-              "\U000F0769",  // 18: Ceiling Light
-              "\U000F1793",  // 19: Chandelier
-              "\U000F0150",  // 20: Clock
-              "\U000F109F",  // 21: Coffee Maker
-              "\U000F1846",  // 22: Curtains
-              "\U000F1847",  // 23: Curtains Closed
-              "\U000F095F",  // 24: Desk Lamp
-              "\U000F0AAC",  // 25: Dishwasher
-              "\U000F0A43",  // 26: Dog
-              "\U000F081A",  // 27: Door
-              "\U000F081C",  // 28: Door Open
-              "\U000F0869",  // 29: Doorbell
-              "\U000F0917",  // 30: Dryer
-              "\U000F05F1",  // 31: EV Charger
-              "\U000F0210",  // 32: Fan
-              "\U000F0238",  // 33: Fire
-              "\U000F0E2E",  // 34: Fireplace
-              "\U000F0241",  // 35: Flash
-              "\U000F08DD",  // 36: Floor Lamp
-              "\U000F096B",  // 37: Fountain
-              "\U000F0290",  // 38: Fridge
-              "\U000F0297",  // 39: Gamepad
-              "\U000F0372",  // 40: Garage
-              "\U000F06DA",  // 41: Garage Open
-              "\U000F0299",  // 42: Gate
-              "\U000F116A",  // 43: Gate Open
-              "\U000F02CB",  // 44: Headphones
-              "\U000F0438",  // 45: Heater
-              "\U000F02DC",  // 46: Home
-              "\U000F0828",  // 47: Hot Tub
-              "\U000F1099",  // 48: Humidifier
-              "\U000F1824",  // 49: Iron
-              "\U000F05FA",  // 50: Kettle
-              "\U000F030B",  // 51: Key
-              "\U000F06B5",  // 52: Lamp
-              "\U000F11F7",  // 53: Lawnmower
-              "\U000F032A",  // 54: Leaf
-              "\U000F07D6",  // 55: LED Strip
-              "\U000F097E",  // 56: Light Switch
-              "\U000F0335",  // 57: Lightbulb
-              "\U000F1253",  // 58: Lightbulb Group
-              "\U000F033E",  // 59: Lock
-              "\U000F06EE",  // 60: Mailbox
-              "\U000F0C99",  // 61: Microwave
-              "\U000F0379",  // 62: Monitor
-              "\U000F0D91",  // 63: Motion Sensor
-              "\U000F075A",  // 64: Music
-              "\U000F1020",  // 65: Outdoor Lamp
-              "\U000F04DE",  // 66: Oven
-              "\U000F03D6",  // 67: Package
-              "\U000F0606",  // 68: Pool
-              "\U000F0425",  // 69: Power
-              "\U000F0654",  // 70: Power Plug
-              "\U000F042A",  // 71: Printer
-              "\U000F042E",  // 72: Projector
-              "\U000F070D",  // 73: Robot Vacuum
-              "\U000F1A6B",  // 74: Roller Shade
-              "\U000F1A6C",  // 75: Roller Shade Closed
-              "\U000F0469",  // 76: Router
-              "\U000F068A",  // 77: Security
-              "\U000F09A1",  // 78: Shower
-              "\U000F0392",  // 79: Smoke Detector
-              "\U000F0717",  // 80: Snowflake
-              "\U000F04B9",  // 81: Sofa
-              "\U000F0D9B",  // 82: Solar Panel
-              "\U000F04C3",  // 83: Speaker
-              "\U000F04C9",  // 84: Spotlight
-              "\U000F105F",  // 85: Sprinkler
-              "\U000F12BA",  // 86: String Lights
-              "\U000F05A8",  // 87: Sun
-              "\U000F0502",  // 88: Television
-              "\U000F050F",  // 89: Thermometer
-              "\U000F0393",  // 90: Thermostat
-              "\U000F051B",  // 91: Timer
-              "\U000F09AB",  // 92: Toilet
-              "\U000F0A79",  // 93: Trash Can
-              "\U000F0427",  // 94: Wall Outlet
-              "\U000F072A",  // 95: Washer
-              "\U000F058C",  // 96: Water
-              "\U000F0F92",  // 97: Water Heater
-              "\U000F0595",  // 98: Weather
-              "\U000F111C",  // 99: Window
+              "\U000F0493",  //   0: Auto (cog fallback)
+              "\U000F0004",  //   1: Account
+              "\U000F001B",  //   2: Air Conditioner
+              "\U000F0D43",  //   3: Air Filter
+              "\U000F0D44",  //   4: Air Purifier
+              "\U000F009E",  //   5: Alarm
+              "\U000F078F",  //   6: Alarm Light
+              "\U000F0614",  //   7: Application
+              "\U000F0079",  //   8: Battery
+              "\U000F007A",  //   9: Battery 10%
+              "\U000F007B",  //  10: Battery 20%
+              "\U000F007C",  //  11: Battery 30%
+              "\U000F007D",  //  12: Battery 40%
+              "\U000F007E",  //  13: Battery 50%
+              "\U000F007F",  //  14: Battery 60%
+              "\U000F0080",  //  15: Battery 70%
+              "\U000F0081",  //  16: Battery 80%
+              "\U000F0082",  //  17: Battery 90%
+              "\U000F0083",  //  18: Battery Alert
+              "\U000F0084",  //  19: Battery Charging
+              "\U000F0085",  //  20: Battery Charging 100
+              "\U000F089E",  //  21: Battery Charging 70
+              "\U000F12A3",  //  22: Battery High
+              "\U000F12A1",  //  23: Battery Low
+              "\U000F12A2",  //  24: Battery Medium
+              "\U000F125D",  //  25: Battery Off
+              "\U000F008E",  //  26: Battery Outline
+              "\U000F0091",  //  27: Battery Unknown
+              "\U000F02E3",  //  28: Bed
+              "\U000F009A",  //  29: Bell
+              "\U000F00AC",  //  30: Blinds
+              "\U000F1A2B",  //  31: Blinds Horizontal
+              "\U000F1A2C",  //  32: Blinds Horizontal Closed
+              "\U000F1011",  //  33: Blinds Open
+              "\U000F00AF",  //  34: Bluetooth
+              "\U000F00E2",  //  35: Broom
+              "\U000F0100",  //  36: Camera
+              "\U000F0B6C",  //  37: Car Electric
+              "\U000F0118",  //  38: Cast
+              "\U000F07AE",  //  39: CCTV
+              "\U000F1797",  //  40: Ceiling Fan
+              "\U000F0769",  //  41: Ceiling Light
+              "\U000F1793",  //  42: Chandelier
+              "\U000F0150",  //  43: Clock
+              "\U000F109F",  //  44: Coffee Maker
+              "\U000F1480",  //  45: Current AC
+              "\U000F095C",  //  46: Current DC
+              "\U000F1846",  //  47: Curtains
+              "\U000F1847",  //  48: Curtains Closed
+              "\U000F095F",  //  49: Desk Lamp
+              "\U000F0AAC",  //  50: Dishwasher
+              "\U000F0A43",  //  51: Dog
+              "\U000F081A",  //  52: Door
+              "\U000F081C",  //  53: Door Open
+              "\U000F0869",  //  54: Doorbell
+              "\U000F0917",  //  55: Dryer
+              "\U000F05F1",  //  56: EV Charger
+              "\U000F0210",  //  57: Fan
+              "\U000F0238",  //  58: Fire
+              "\U000F0E2E",  //  59: Fireplace
+              "\U000F0241",  //  60: Flash
+              "\U000F08DD",  //  61: Floor Lamp
+              "\U000F096B",  //  62: Fountain
+              "\U000F0290",  //  63: Fridge
+              "\U000F0297",  //  64: Gamepad
+              "\U000F0372",  //  65: Garage
+              "\U000F06DA",  //  66: Garage Open
+              "\U000F0299",  //  67: Gate
+              "\U000F116A",  //  68: Gate Open
+              "\U000F029A",  //  69: Gauge
+              "\U000F0873",  //  70: Gauge Empty
+              "\U000F0874",  //  71: Gauge Full
+              "\U000F0875",  //  72: Gauge Low
+              "\U000F192C",  //  73: Grid Export
+              "\U000F192D",  //  74: Grid Import
+              "\U000F19DD",  //  75: Grid Off
+              "\U000F02CB",  //  76: Headphones
+              "\U000F0438",  //  77: Heater
+              "\U000F02DC",  //  78: Home
+              "\U000F0828",  //  79: Hot Tub
+              "\U000F1099",  //  80: Humidifier
+              "\U000F1509",  //  81: Humidity Alert
+              "\U000F1824",  //  82: Iron
+              "\U000F05FA",  //  83: Kettle
+              "\U000F030B",  //  84: Key
+              "\U000F06B5",  //  85: Lamp
+              "\U000F0317",  //  86: LAN
+              "\U000F11F7",  //  87: Lawnmower
+              "\U000F032A",  //  88: Leaf
+              "\U000F07D6",  //  89: LED Strip
+              "\U000F1051",  //  90: LED Strip Variant
+              "\U000F097E",  //  91: Light Switch
+              "\U000F0335",  //  92: Lightbulb
+              "\U000F1253",  //  93: Lightbulb Group
+              "\U000F1A4C",  //  94: Lightbulb Night
+              "\U000F140B",  //  95: Lightning Bolt
+              "\U000F033E",  //  96: Lock
+              "\U000F06EE",  //  97: Mailbox
+              "\U000F036B",  //  98: Message Video
+              "\U000F1A57",  //  99: Meter Electric
+              "\U000F1A59",  // 100: Meter Gas
+              "\U000F0C99",  // 101: Microwave
+              "\U000F0379",  // 102: Monitor
+              "\U000F0D91",  // 103: Motion Sensor
+              "\U000F07DE",  // 104: Movie Roll
+              "\U000F075A",  // 105: Music
+              "\U000F1020",  // 106: Outdoor Lamp
+              "\U000F04DE",  // 107: Oven
+              "\U000F03D6",  // 108: Package
+              "\U000F03D7",  // 109: Package Closed
+              "\U000F0606",  // 110: Pool
+              "\U000F0425",  // 111: Power
+              "\U000F0654",  // 112: Power Plug
+              "\U000F042A",  // 113: Printer
+              "\U000F042B",  // 114: Printer 3D
+              "\U000F042E",  // 115: Projector
+              "\U000F070D",  // 116: Robot Vacuum
+              "\U000F1A6B",  // 117: Roller Shade
+              "\U000F1A6C",  // 118: Roller Shade Closed
+              "\U000F0469",  // 119: Router
+              "\U000F1087",  // 120: Router Network
+              "\U000F068A",  // 121: Security
+              "\U000F09A1",  // 122: Shower
+              "\U000F0392",  // 123: Smoke Detector
+              "\U000F0717",  // 124: Snowflake
+              "\U000F0F29",  // 125: Snowflake Alert
+              "\U000F1A71",  // 126: Snowflake Thermometer
+              "\U000F04B9",  // 127: Sofa
+              "\U000F0D9B",  // 128: Solar Panel
+              "\U000F0D9C",  // 129: Solar Panel Large
+              "\U000F0A72",  // 130: Solar Power
+              "\U000F1A73",  // 131: Solar Power Variant
+              "\U000F04C3",  // 132: Speaker
+              "\U000F04C9",  // 133: Spotlight
+              "\U000F105F",  // 134: Sprinkler
+              "\U000F12BA",  // 135: String Lights
+              "\U000F05A8",  // 136: Sun
+              "\U000F05BC",  // 137: Table
+              "\U000F0502",  // 138: Television
+              "\U000F050F",  // 139: Thermometer
+              "\U000F0E01",  // 140: Thermometer Alert
+              "\U000F10C2",  // 141: Thermometer High
+              "\U000F10C3",  // 142: Thermometer Low
+              "\U000F0393",  // 143: Thermostat
+              "\U000F051B",  // 144: Timer
+              "\U000F09AB",  // 145: Toilet
+              "\U000F0D3E",  // 146: Transmission Tower
+              "\U000F0A79",  // 147: Trash Can
+              "\U000F0427",  // 148: Wall Outlet
+              "\U000F072A",  // 149: Washer
+              "\U000F058C",  // 150: Water
+              "\U000F0F92",  // 151: Water Heater
+              "\U000F058E",  // 152: Water Percent
+              "\U000F0590",  // 153: Weather Cloudy
+              "\U000F0F2F",  // 154: Weather Cloudy Alert
+              "\U000F1B5A",  // 155: Weather Dust
+              "\U000F0591",  // 156: Weather Fog
+              "\U000F0592",  // 157: Weather Hail
+              "\U000F0F30",  // 158: Weather Hazy
+              "\U000F0898",  // 159: Weather Hurricane
+              "\U000F0593",  // 160: Weather Lightning
+              "\U000F067E",  // 161: Weather Lightning Rainy
+              "\U000F0594",  // 162: Weather Night
+              "\U000F0F31",  // 163: Weather Night Cloudy
+              "\U000F0595",  // 164: Weather Partly Cloudy
+              "\U000F0F32",  // 165: Weather Partly Lightning
+              "\U000F0F33",  // 166: Weather Partly Rainy
+              "\U000F0F34",  // 167: Weather Partly Snowy
+              "\U000F0F35",  // 168: Weather Partly Snowy Rainy
+              "\U000F0596",  // 169: Weather Pouring
+              "\U000F0597",  // 170: Weather Rainy
+              "\U000F0598",  // 171: Weather Snowy
+              "\U000F0F36",  // 172: Weather Snowy Heavy
+              "\U000F067F",  // 173: Weather Snowy Rainy
+              "\U000F0599",  // 174: Weather Sunny
+              "\U000F0F37",  // 175: Weather Sunny Alert
+              "\U000F14E4",  // 176: Weather Sunny Off
+              "\U000F059A",  // 177: Weather Sunset
+              "\U000F059B",  // 178: Weather Sunset Down
+              "\U000F059C",  // 179: Weather Sunset Up
+              "\U000F0F38",  // 180: Weather Tornado
+              "\U000F059D",  // 181: Weather Windy
+              "\U000F059E",  // 182: Weather Windy Variant
+              "\U000F1A88",  // 183: Wind Power
+              "\U000F0DA5",  // 184: Wind Turbine
+              "\U000F19AB",  // 185: Wind Turbine Alert
+              "\U000F19AC",  // 186: Wind Turbine Check
+              "\U000F111C",  // 187: Window
             };
 
             static bool has_sensor[NUM_SLOTS] = {};
@@ -233,15 +321,15 @@ esphome:
                 size_t icon_idx = s.icon->active_index().value_or(0);
                 if (icon_idx == 0) {
                   std::string domain = entity_id.substr(0, entity_id.find('.'));
-                  if (domain == "light")              icon_idx = 57;
-                  else if (domain == "switch")        icon_idx = 70;
-                  else if (domain == "fan")           icon_idx = 32;
-                  else if (domain == "lock")          icon_idx = 59;
-                  else if (domain == "cover")         icon_idx = 10;
+                  if (domain == "light")              icon_idx = 92;
+                  else if (domain == "switch")        icon_idx = 112;
+                  else if (domain == "fan")           icon_idx = 57;
+                  else if (domain == "lock")          icon_idx = 96;
+                  else if (domain == "cover")         icon_idx = 31;
                   else if (domain == "climate")       icon_idx = 2;
-                  else if (domain == "media_player")  icon_idx = 83;
-                  else if (domain == "camera")        icon_idx = 13;
-                  else if (domain == "binary_sensor") icon_idx = 63;
+                  else if (domain == "media_player")  icon_idx = 132;
+                  else if (domain == "camera")        icon_idx = 36;
+                  else if (domain == "binary_sensor") icon_idx = 103;
                 }
                 lv_label_set_text(icon_lbl, icon_codepoints[icon_idx]);
 

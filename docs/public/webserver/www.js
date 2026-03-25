@@ -241,7 +241,7 @@
     ".sp-temp.sp-visible{opacity:1}" +
     ".sp-clock{position:absolute;left:50%;transform:translateX(-50%);" +
     "color:#fff;font-size:1.95cqw;white-space:nowrap}" +
-    ".sp-main{position:absolute;top:4.1cqw;left:0.49cqw;right:0.49cqw;bottom:0.49cqw;" +
+    ".sp-main{position:absolute;top:5.1cqw;left:0.49cqw;right:0.49cqw;bottom:0.49cqw;" +
     "display:flex;flex-direction:column;flex-wrap:wrap;align-content:flex-start;gap:0.98cqw}" +
 
     // Preview buttons

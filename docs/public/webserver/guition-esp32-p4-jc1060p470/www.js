@@ -101,6 +101,7 @@
     Lightbulb: "lightbulb",
     "Lightbulb Group": "lightbulb-group",
     "Lightbulb Night": "lightbulb-night",
+    "Lightbulb Off": "lightbulb-off",
     "Lightning Bolt": "lightning-bolt",
     Lock: "lock",
     Mailbox: "mailbox",
@@ -433,7 +434,7 @@
     // Context menu
     ".sp-ctx-menu{position:fixed;z-index:200;background:var(--surface);border:1px solid var(--border);" +
     "border-radius:var(--radius);padding:4px 0;min-width:160px;box-shadow:0 4px 16px rgba(0,0,0,.5);" +
-    "font-family:inherit}" +
+    "font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}" +
     ".sp-ctx-item{display:flex;align-items:center;gap:10px;padding:8px 14px;" +
     "cursor:pointer;font-size:.85rem;color:var(--text);transition:background .1s;white-space:nowrap}" +
     ".sp-ctx-item:hover{background:#3a3a3a}" +

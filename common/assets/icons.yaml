@@ -109,6 +109,7 @@ font:
       - "\U000F0335"  # mdi-lightbulb
       - "\U000F1253"  # mdi-lightbulb-group
       - "\U000F1A4C"  # mdi-lightbulb-night
+      - "\U000F0E4F"  # mdi-lightbulb-off
       - "\U000F033E"  # mdi-lock
       - "\U000F06EE"  # mdi-mailbox
       # --- Meter ---
@@ -225,6 +226,7 @@ substitutions:
   icon_wifi: "\U000F05A9"
   icon_cog: "\U000F0493"
   icon_lightbulb: "\U000F0335"
+  icon_lightbulb_off: "\U000F0E4F"
   icon_printer_3d: "\U000F042B"
   icon_air_filter: "\U000F0D43"
   icon_led_strip_variant: "\U000F1051"

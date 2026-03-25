@@ -165,6 +165,7 @@ select:
       - "Lightbulb"
       - "Lightbulb Group"
       - "Lightbulb Night"
+      - "Lightbulb Off"
       - "Lightning Bolt"
       - "Lock"
       - "Mailbox"

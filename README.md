@@ -1,3 +1,5 @@
+![Espcontrol on a 7-inch touchscreen: home screen with temperature, clock, and control tiles](devices/guition-esp32-p4-jc1060p470/device/home_screen_hero.jpg)
+
 # Espcontrol
 
 Turn a 7-inch touchscreen into a control panel for your smart home. Espcontrol is free, open-source firmware for the **Guition ESP32-P4 JC1060P470** display that connects to [Home Assistant](https://www.home-assistant.io/) and lets you control up to 20 devices with a single tap.

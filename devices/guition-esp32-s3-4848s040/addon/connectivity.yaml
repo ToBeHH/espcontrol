@@ -19,12 +19,7 @@ wifi:
         condition:
           lambda: 'return !id(button_order).state.empty();'
         then:
-          - lvgl.page.show: page_1
-          - lambda: 'id(current_page) = 0;'
-          - script.execute: update_page_dots
-          - lvgl.widget.update:
-              id: page_dots
-              hidden: false
+          - lvgl.page.show: main_page
           - if:
               condition:
                 or:
@@ -59,9 +54,6 @@ wifi:
               hidden: true
           - lvgl.widget.update:
               id: display_time
-              hidden: true
-          - lvgl.widget.update:
-              id: page_dots
               hidden: true
           - lvgl.page.show: wifi_setup_page
           - script.execute: setup_screen_dim

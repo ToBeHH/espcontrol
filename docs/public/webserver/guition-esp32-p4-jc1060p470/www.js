@@ -1373,7 +1373,7 @@
 
     initIconPicker(iconOnPicker, iconOnVal, slot, function (opt) {
       state.buttons[slot - 1].icon_on = opt;
-      postSelect("Button " + slot + " Icon On", opt);
+      postText("Button " + slot + " Icon On", opt);
       renderPreview();
     });
 
@@ -1411,7 +1411,7 @@
         postText("Button " + slot + " Sensor Unit", "");
       } else {
         state.buttons[slot - 1].icon_on = "Auto";
-        postSelect("Button " + slot + " Icon On", "Auto");
+        postText("Button " + slot + " Icon On", "Auto");
         var ionPreview = iconOnPicker.querySelector(".sp-icon-picker-preview");
         if (ionPreview) ionPreview.className = "sp-icon-picker-preview mdi mdi-cog";
         var ionInput = iconOnPicker.querySelector(".sp-icon-picker-input");
@@ -1438,7 +1438,7 @@
         state.buttons[slot - 1].icon_on = "Auto";
         postText("Button " + slot + " Sensor", "");
         postText("Button " + slot + " Sensor Unit", "");
-        postSelect("Button " + slot + " Icon On", "Auto");
+        postText("Button " + slot + " Icon On", "Auto");
         renderPreview();
       }
     });
@@ -1504,7 +1504,7 @@
         onSelectOpt(opt);
       } else {
         state.buttons[slot - 1].icon = opt;
-        postSelect("Button " + slot + " Icon", opt);
+        postText("Button " + slot + " Icon", opt);
         renderPreview();
       }
     }
@@ -1812,8 +1812,8 @@
     postText("Button " + newSlot + " Label", src.label);
     postText("Button " + newSlot + " Sensor", src.sensor);
     postText("Button " + newSlot + " Sensor Unit", src.unit);
-    postSelect("Button " + newSlot + " Icon", src.icon || "Auto");
-    postSelect("Button " + newSlot + " Icon On", src.icon_on || "Auto");
+    postText("Button " + newSlot + " Icon", src.icon || "Auto");
+    postText("Button " + newSlot + " Icon On", src.icon_on || "Auto");
     selectButton(newSlot);
   }
 
@@ -1828,8 +1828,8 @@
     postText("Button " + slot + " Label", "");
     postText("Button " + slot + " Sensor", "");
     postText("Button " + slot + " Sensor Unit", "");
-    postSelect("Button " + slot + " Icon", "Auto");
-    postSelect("Button " + slot + " Icon On", "Auto");
+    postText("Button " + slot + " Icon", "Auto");
+    postText("Button " + slot + " Icon On", "Auto");
   }
 
   function deleteButtons(slots) {
@@ -1841,8 +1841,8 @@
       postText("Button " + slot + " Label", "");
       postText("Button " + slot + " Sensor", "");
       postText("Button " + slot + " Sensor Unit", "");
-      postSelect("Button " + slot + " Icon", "Auto");
-      postSelect("Button " + slot + " Icon On", "Auto");
+      postText("Button " + slot + " Icon", "Auto");
+      postText("Button " + slot + " Icon On", "Auto");
     });
     postText("Button Order", state.order.join(","));
     renderPreview();
@@ -1931,8 +1931,8 @@
           postText("Button " + n + " Label", b.label || "");
           postText("Button " + n + " Sensor", b.sensor || "");
           postText("Button " + n + " Sensor Unit", b.unit || "");
-          postSelect("Button " + n + " Icon", b.icon || "Auto");
-          postSelect("Button " + n + " Icon On", b.icon_on || "Auto");
+          postText("Button " + n + " Icon", b.icon || "Auto");
+          postText("Button " + n + " Icon On", b.icon_on || "Auto");
 
           state.buttons[i] = {
             entity: b.entity || "",
@@ -2144,7 +2144,7 @@
         },
       },
       {
-        re: /^select-button_(\d+)_icon$/,
+        re: /^text-button_(\d+)_icon$/,
         fn: function (m, val) {
           var slot = parseInt(m[1], 10);
           if (slot >= 1 && slot <= NUM_SLOTS) {
@@ -2161,7 +2161,7 @@
         },
       },
       {
-        re: /^select-button_(\d+)_icon_on$/,
+        re: /^text-button_(\d+)_icon_on$/,
         fn: function (m, val) {
           var slot = parseInt(m[1], 10);
           if (slot >= 1 && slot <= NUM_SLOTS) {

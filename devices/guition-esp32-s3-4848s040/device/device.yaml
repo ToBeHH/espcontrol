@@ -240,7 +240,7 @@ script:
   - id: update_page_dots
     then:
       - lambda: |-
-          lv_obj_t* dots[] = {id(dot_1)->obj, id(dot_2)->obj, id(dot_3)->obj, id(dot_4)->obj, id(dot_5)->obj};
+          lv_obj_t* dots[] = {id(dot_1), id(dot_2), id(dot_3), id(dot_4), id(dot_5)};
           int page = id(current_page);
           for (int i = 0; i < 5; i++) {
             if (i == page) {

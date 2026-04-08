@@ -542,6 +542,7 @@
     editingSubpage: null,
     subpageSelectedSlots: [],
     subpageLastClicked: -1,
+    clipboard: null,
   };
 
   for (var i = 0; i < NUM_SLOTS; i++) {
@@ -1483,6 +1484,7 @@
         empty.innerHTML = '<span class="sp-add-icon mdi mdi-plus"></span>';
         (function (p) {
           empty.addEventListener("click", function () { addButton(p); });
+          empty.addEventListener("contextmenu", function (ev) { showPasteContextMenu(ev, p); });
         })(pos);
         main.appendChild(empty);
       }
@@ -1575,6 +1577,7 @@
         empty.innerHTML = '<span class="sp-add-icon mdi mdi-plus"></span>';
         (function (p) {
           empty.addEventListener("click", function () { addSubpageButton(p); });
+          empty.addEventListener("contextmenu", function (ev) { showSubpagePasteContextMenu(ev, p); });
         })(pos);
         main.appendChild(empty);
       }
@@ -2316,6 +2319,15 @@
 
     if (isMulti) {
       var bulkSlots = state.selectedSlots.slice();
+      var cutItem = document.createElement("div");
+      cutItem.className = "sp-ctx-item";
+      cutItem.innerHTML = '<span class="mdi mdi-content-cut"></span>Cut ' + bulkSlots.length + " Buttons";
+      cutItem.addEventListener("mousedown", function (ev) {
+        ev.preventDefault();
+        hideContextMenu();
+        cutButtons(bulkSlots);
+      });
+      ctxMenu.appendChild(cutItem);
       var delItem = document.createElement("div");
       delItem.className = "sp-ctx-item sp-ctx-danger";
       delItem.innerHTML = '<span class="mdi mdi-delete"></span>Delete ' + bulkSlots.length + " Buttons";
@@ -2364,6 +2376,16 @@
         duplicateButton(slot);
       });
       ctxMenu.appendChild(dupItem);
+
+      var cutItem = document.createElement("div");
+      cutItem.className = "sp-ctx-item";
+      cutItem.innerHTML = '<span class="mdi mdi-content-cut"></span>Cut';
+      cutItem.addEventListener("mousedown", function (ev) {
+        ev.preventDefault();
+        hideContextMenu();
+        cutButton(slot);
+      });
+      ctxMenu.appendChild(cutItem);
 
       var divider = document.createElement("div");
       divider.className = "sp-ctx-divider";
@@ -2575,6 +2597,136 @@
     renderButtonSettings();
   }
 
+  // ── Cut / Paste ────────────────────────────────────────────────────
+
+  function cutButton(slot) {
+    var src = state.buttons[slot - 1];
+    var entry = {
+      entity: src.entity, label: src.label, icon: src.icon,
+      icon_on: src.icon_on, sensor: src.sensor, unit: src.unit,
+      type: src.type || "", subpageConfig: null, size: state.sizes[slot] || 1,
+    };
+    if (src.type === "subpage" && state.subpages[slot]) {
+      entry.subpageConfig = serializeSubpageConfig(state.subpages[slot]);
+    }
+    state.clipboard = { buttons: [entry] };
+    deleteButton(slot);
+  }
+
+  function cutButtons(slots) {
+    var entries = [];
+    slots.forEach(function (slot) {
+      var src = state.buttons[slot - 1];
+      var entry = {
+        entity: src.entity, label: src.label, icon: src.icon,
+        icon_on: src.icon_on, sensor: src.sensor, unit: src.unit,
+        type: src.type || "", subpageConfig: null, size: state.sizes[slot] || 1,
+      };
+      if (src.type === "subpage" && state.subpages[slot]) {
+        entry.subpageConfig = serializeSubpageConfig(state.subpages[slot]);
+      }
+      entries.push(entry);
+    });
+    state.clipboard = { buttons: entries };
+    deleteButtons(slots);
+  }
+
+  function cutSubpageButton(slot) {
+    var homeSlot = state.editingSubpage;
+    var sp = getSubpage(homeSlot);
+    var src = sp.buttons[slot - 1];
+    state.clipboard = { buttons: [{
+      entity: src.entity, label: src.label, icon: src.icon,
+      icon_on: src.icon_on, sensor: src.sensor, unit: src.unit,
+      type: "", subpageConfig: null, size: sp.sizes[slot] || 1,
+    }] };
+    deleteSubpageButton(slot);
+  }
+
+  function pasteButton(pos) {
+    if (!state.clipboard) return;
+    var entries = state.clipboard.buttons;
+    var lastSlot = -1;
+    for (var i = 0; i < entries.length; i++) {
+      var newSlot = firstFreeSlot();
+      if (newSlot < 0) break;
+      var cell = firstFreeCell(pos);
+      if (cell < 0) break;
+      var e = entries[i];
+      state.buttons[newSlot - 1] = {
+        entity: e.entity, label: e.label, icon: e.icon,
+        icon_on: e.icon_on, sensor: e.sensor, unit: e.unit, type: e.type || "",
+      };
+      if (e.size === 2) state.sizes[newSlot] = 2;
+      state.grid[cell] = newSlot;
+      if (e.size === 2) {
+        var below = cell + GRID_COLS;
+        if (below < NUM_SLOTS && state.grid[below] === 0) state.grid[below] = -1;
+      }
+      postText("Button " + newSlot + " Entity", e.entity);
+      postText("Button " + newSlot + " Label", e.label);
+      postText("Button " + newSlot + " Sensor", e.sensor);
+      postText("Button " + newSlot + " Sensor Unit", e.unit);
+      postText("Button " + newSlot + " Icon", e.icon || "Auto");
+      postText("Button " + newSlot + " Icon On", e.icon_on || "Auto");
+      postText("Button " + newSlot + " Type", e.type || "");
+      if (e.subpageConfig) {
+        var spCopy = parseSubpageConfig(e.subpageConfig);
+        spCopy.sizes = {};
+        buildSubpageGrid(spCopy);
+        state.subpages[newSlot] = spCopy;
+        postText("Subpage " + newSlot + " Config", e.subpageConfig);
+      }
+      lastSlot = newSlot;
+    }
+    postText("Button Order", serializeGrid(state.grid));
+    state.clipboard = null;
+    if (lastSlot > 0) selectButton(lastSlot);
+    renderPreview();
+    renderButtonSettings();
+  }
+
+  function pasteSubpageButton(pos) {
+    if (!state.clipboard) return;
+    var homeSlot = state.editingSubpage;
+    var sp = getSubpage(homeSlot);
+    var maxPos = NUM_SLOTS - 1;
+    var entries = state.clipboard.buttons;
+    var lastSlot = -1;
+    for (var i = 0; i < entries.length; i++) {
+      var cell = -1;
+      for (var c = pos; c < maxPos; c++) {
+        if (sp.grid[c] === 0) { cell = c; break; }
+      }
+      if (cell < 0) break;
+      var newSlot = subpageFirstFreeSlot(sp);
+      while (sp.buttons.length < newSlot) {
+        sp.buttons.push({ entity: "", label: "", icon: "Auto", icon_on: "Auto", sensor: "", unit: "" });
+      }
+      var e = entries[i];
+      sp.buttons[newSlot - 1] = {
+        entity: e.entity, label: e.label, icon: e.icon,
+        icon_on: e.icon_on, sensor: e.sensor, unit: e.unit,
+      };
+      if (e.size === 2) sp.sizes[newSlot] = 2;
+      sp.grid[cell] = newSlot;
+      if (e.size === 2) {
+        var below = cell + GRID_COLS;
+        if (below < maxPos && sp.grid[below] === 0) sp.grid[below] = -1;
+      }
+      lastSlot = newSlot;
+    }
+    sp.order = serializeSubpageGrid(sp);
+    state.clipboard = null;
+    saveSubpageConfig(homeSlot);
+    if (lastSlot > 0) {
+      state.subpageSelectedSlots = [lastSlot];
+      state.subpageLastClicked = lastSlot;
+    }
+    renderPreview();
+    renderButtonSettings();
+  }
+
   function showSubpageContextMenu(e, slot) {
     e.preventDefault();
     hideContextMenu();
@@ -2611,6 +2763,16 @@
     });
     ctxMenu.appendChild(dblItem);
 
+    var cutItem = document.createElement("div");
+    cutItem.className = "sp-ctx-item";
+    cutItem.innerHTML = '<span class="mdi mdi-content-cut"></span>Cut';
+    cutItem.addEventListener("mousedown", function (ev) {
+      ev.preventDefault();
+      hideContextMenu();
+      cutSubpageButton(slot);
+    });
+    ctxMenu.appendChild(cutItem);
+
     var divider = document.createElement("div");
     divider.className = "sp-ctx-divider";
     ctxMenu.appendChild(divider);
@@ -2627,6 +2789,66 @@
 
     document.body.appendChild(ctxMenu);
 
+    var menuW = ctxMenu.offsetWidth;
+    var menuH = ctxMenu.offsetHeight;
+    var x = e.clientX;
+    var y = e.clientY;
+    if (x + menuW > window.innerWidth) x = window.innerWidth - menuW - 4;
+    if (y + menuH > window.innerHeight) y = window.innerHeight - menuH - 4;
+    if (x < 0) x = 4;
+    if (y < 0) y = 4;
+    ctxMenu.style.left = x + "px";
+    ctxMenu.style.top = y + "px";
+  }
+
+  // ── Paste context menus (empty cells) ──────────────────────────────
+
+  function showPasteContextMenu(e, pos) {
+    e.preventDefault();
+    if (!state.clipboard) return;
+    hideContextMenu();
+    ctxMenu = document.createElement("div");
+    ctxMenu.className = "sp-ctx-menu";
+    var count = state.clipboard.buttons.length;
+    var pasteItem = document.createElement("div");
+    pasteItem.className = "sp-ctx-item";
+    pasteItem.innerHTML = '<span class="mdi mdi-content-paste"></span>' + (count > 1 ? "Paste " + count + " Buttons" : "Paste");
+    pasteItem.addEventListener("mousedown", function (ev) {
+      ev.preventDefault();
+      hideContextMenu();
+      pasteButton(pos);
+    });
+    ctxMenu.appendChild(pasteItem);
+    document.body.appendChild(ctxMenu);
+    var menuW = ctxMenu.offsetWidth;
+    var menuH = ctxMenu.offsetHeight;
+    var x = e.clientX;
+    var y = e.clientY;
+    if (x + menuW > window.innerWidth) x = window.innerWidth - menuW - 4;
+    if (y + menuH > window.innerHeight) y = window.innerHeight - menuH - 4;
+    if (x < 0) x = 4;
+    if (y < 0) y = 4;
+    ctxMenu.style.left = x + "px";
+    ctxMenu.style.top = y + "px";
+  }
+
+  function showSubpagePasteContextMenu(e, pos) {
+    e.preventDefault();
+    if (!state.clipboard) return;
+    hideContextMenu();
+    ctxMenu = document.createElement("div");
+    ctxMenu.className = "sp-ctx-menu";
+    var count = state.clipboard.buttons.length;
+    var pasteItem = document.createElement("div");
+    pasteItem.className = "sp-ctx-item";
+    pasteItem.innerHTML = '<span class="mdi mdi-content-paste"></span>' + (count > 1 ? "Paste " + count + " Buttons" : "Paste");
+    pasteItem.addEventListener("mousedown", function (ev) {
+      ev.preventDefault();
+      hideContextMenu();
+      pasteSubpageButton(pos);
+    });
+    ctxMenu.appendChild(pasteItem);
+    document.body.appendChild(ctxMenu);
     var menuW = ctxMenu.offsetWidth;
     var menuH = ctxMenu.offsetHeight;
     var x = e.clientX;

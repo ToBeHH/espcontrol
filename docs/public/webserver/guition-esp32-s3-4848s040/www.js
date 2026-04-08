@@ -7,10 +7,13 @@
 
 // Custom UI: three-page layout (Screen / Settings / Logs)
 (function () {
-  var NUM_SLOTS = 9;
-  var GRID_COLS = 3;
-  var GRID_ROWS = 3;
+  // __DEVICE_CONFIG_START__
   var DEVICE_ID = "guition-esp32-s3-4848s040";
+  var CFG = {"slots":9,"cols":3,"rows":3,"dragMode":"displace","dragAnimation":true,"screen":{"width":"66%","aspect":"1/1"},"topbar":{"height":7.5,"padding":"0.83cqw","fontSize":3.75},"grid":{"top":7.5,"left":1.04,"right":1.04,"bottom":0.83,"gap":2.08,"fr":"1fr"},"btn":{"radius":1.67,"padding":2.92,"iconSize":9.58,"labelSize":3.96},"emptyCell":{"radius":1.67},"sensorBadge":{"top":2.08,"right":2.08,"fontSize":3.33},"subpageBadge":{"bottom":2.08,"right":2.08,"fontSize":4},"backBtn":{"radius":1.67,"padding":2.92,"iconSize":9.58,"labelSize":3.96}};
+  // __DEVICE_CONFIG_END__
+  var NUM_SLOTS = CFG.slots;
+  var GRID_COLS = CFG.cols;
+  var GRID_ROWS = CFG.rows;
 
   var ICON_MAP = {
     Auto: "cog",
@@ -255,41 +258,41 @@
 
     // Screen preview
     ".sp-wrap{display:flex;justify-content:center;padding:20px var(--gap) 4px}" +
-    ".sp-screen{width:66%;aspect-ratio:1/1;background:#000;" +
+    ".sp-screen{width:" + CFG.screen.width + ";aspect-ratio:" + CFG.screen.aspect + ";background:#000;" +
     "border-radius:var(--radius);position:relative;overflow:hidden;" +
     "box-shadow:0 2px 20px rgba(0,0,0,.35);border:2px solid var(--surface);" +
     "container-type:inline-size;font-family:Roboto,sans-serif;user-select:none}" +
-    ".sp-topbar{position:absolute;top:0;left:0;right:0;height:7.5cqw;" +
-    "display:flex;align-items:center;padding:0.83cqw;z-index:1}" +
-    ".sp-temp{color:#fff;font-size:3.75cqw;white-space:nowrap;opacity:0;transition:opacity .3s}" +
+    ".sp-topbar{position:absolute;top:0;left:0;right:0;height:" + CFG.topbar.height + "cqw;" +
+    "display:flex;align-items:center;padding:" + CFG.topbar.padding + ";z-index:1}" +
+    ".sp-temp{color:#fff;font-size:" + CFG.topbar.fontSize + "cqw;white-space:nowrap;opacity:0;transition:opacity .3s}" +
     ".sp-temp.sp-visible{opacity:1}" +
     ".sp-clock{position:absolute;left:50%;transform:translateX(-50%);" +
-    "color:#fff;font-size:3.75cqw;white-space:nowrap}" +
-    ".sp-main{position:absolute;top:7.5cqw;left:1.04cqw;right:1.04cqw;bottom:0.83cqw;" +
-    "display:grid;grid-template-columns:repeat(" + GRID_COLS + ",1fr);" +
-    "grid-template-rows:repeat(" + GRID_ROWS + ",1fr);gap:2.08cqw;overflow:hidden}" +
+    "color:#fff;font-size:" + CFG.topbar.fontSize + "cqw;white-space:nowrap}" +
+    ".sp-main{position:absolute;top:" + CFG.grid.top + "cqw;left:" + CFG.grid.left + "cqw;right:" + CFG.grid.right + "cqw;bottom:" + CFG.grid.bottom + "cqw;" +
+    "display:grid;grid-template-columns:repeat(" + GRID_COLS + "," + CFG.grid.fr + ");" +
+    "grid-template-rows:repeat(" + GRID_ROWS + "," + CFG.grid.fr + ");gap:" + CFG.grid.gap + "cqw;overflow:hidden}" +
 
     // Preview buttons
-    ".sp-btn{border-radius:1.67cqw;padding:2.92cqw;" +
+    ".sp-btn{border-radius:" + CFG.btn.radius + "cqw;padding:" + CFG.btn.padding + "cqw;" +
     "display:flex;flex-direction:column;justify-content:space-between;" +
     "cursor:pointer;transition:all .2s;box-sizing:border-box;border:2px solid transparent;" +
     "position:relative}" +
     ".sp-btn:hover{filter:brightness(1.15)}" +
     ".sp-btn.sp-selected{border-color:var(--accent)}" +
-    ".sp-btn-icon{font-size:9.58cqw;line-height:1;color:#fff}" +
-    ".sp-btn-label{font-size:3.96cqw;line-height:1.2;color:#fff;" +
+    ".sp-btn-icon{font-size:" + CFG.btn.iconSize + "cqw;line-height:1;color:#fff}" +
+    ".sp-btn-label{font-size:" + CFG.btn.labelSize + "cqw;line-height:1.2;color:#fff;" +
     "white-space:nowrap;overflow:hidden;text-overflow:ellipsis}" +
-    ".sp-sensor-badge{position:absolute;top:2.08cqw;right:2.08cqw;font-size:3.33cqw;opacity:.5}" +
+    ".sp-sensor-badge{position:absolute;top:" + CFG.sensorBadge.top + "cqw;right:" + CFG.sensorBadge.right + "cqw;font-size:" + CFG.sensorBadge.fontSize + "cqw;opacity:.5}" +
     ".sp-btn-double{grid-row:span 2}" +
     ".sp-empty-cell{border:2px dashed rgba(255,255,255,.15);background:transparent;" +
-    "border-radius:1.67cqw;display:flex;align-items:center;justify-content:center;" +
+    "border-radius:" + CFG.emptyCell.radius + "cqw;display:flex;align-items:center;justify-content:center;" +
     "cursor:pointer;transition:border-color .2s}" +
     ".sp-empty-cell:hover{border-color:var(--accent)}" +
     ".sp-empty-cell .sp-add-icon{font-size:5cqw;color:rgba(255,255,255,.2)}" +
     ".sp-drop-placeholder{border:2px dashed rgba(92,156,245,.5) !important;" +
     "background:rgba(92,156,245,.08) !important;cursor:default;pointer-events:none}" +
-    ".sp-btn.sp-dragging{opacity:.4;transform:scale(.95)}" +
-    ".sp-empty-cell.sp-drop-placeholder{border-color:rgba(92,156,245,.5)}" +
+    (CFG.dragAnimation ? ".sp-btn.sp-dragging{opacity:.4;transform:scale(.95)}" +
+    ".sp-empty-cell.sp-drop-placeholder{border-color:rgba(92,156,245,.5)}" : "") +
 
     // Hint
     ".sp-hint{text-align:center;font-size:.75rem;opacity:.4;padding:6px 0 12px}" +
@@ -494,14 +497,14 @@
     ".sp-fw-btn:disabled{opacity:.4;cursor:not-allowed}" +
 
     // Subpage back button in preview
-    ".sp-back-btn{border-radius:1.67cqw;padding:2.92cqw;display:flex;flex-direction:column;" +
+    ".sp-back-btn{border-radius:" + CFG.backBtn.radius + "cqw;padding:" + CFG.backBtn.padding + "cqw;display:flex;flex-direction:column;" +
     "justify-content:space-between;box-sizing:border-box;border:2px solid transparent;" +
     "position:relative;background:#222;opacity:.6}" +
-    ".sp-back-btn .sp-btn-icon{font-size:9.58cqw;line-height:1;color:#fff}" +
-    ".sp-back-btn .sp-btn-label{font-size:3.96cqw;line-height:1.2;color:#fff}" +
+    ".sp-back-btn .sp-btn-icon{font-size:" + CFG.backBtn.iconSize + "cqw;line-height:1;color:#fff}" +
+    ".sp-back-btn .sp-btn-label{font-size:" + CFG.backBtn.labelSize + "cqw;line-height:1.2;color:#fff}" +
 
     // Subpage chevron overlay on home buttons
-    ".sp-subpage-badge{position:absolute;bottom:2.08cqw;right:2.08cqw;font-size:4cqw;opacity:.5}";
+    ".sp-subpage-badge{position:absolute;bottom:" + CFG.subpageBadge.bottom + "cqw;right:" + CFG.subpageBadge.right + "cqw;font-size:" + CFG.subpageBadge.fontSize + "cqw;opacity:.5}";
 
   var state = {
     grid: [],
@@ -545,8 +548,8 @@
   var didDrag = false;
   var previewPlaceholder = null;
   var previewDropIdx = -1;
-  var dragRafPending = false;
-  var dragSrcEl = null;
+  var dragRafPending = CFG.dragAnimation ? false : null;
+  var dragSrcEl = CFG.dragAnimation ? null : null;
   var dragIsSubpage = false;
   var orderReceived = false;
   var migrationTimer = null;
@@ -2181,6 +2184,14 @@
   // ── Preview drag and drop ─────────────────────────────────────────
 
   function getCellFromEvent(e, container) {
+    if (CFG.dragMode === "swap") {
+      var rect = container.getBoundingClientRect();
+      var col = Math.floor((e.clientX - rect.left) / (rect.width / GRID_COLS));
+      var row = Math.floor((e.clientY - rect.top) / (rect.height / GRID_ROWS));
+      col = Math.max(0, Math.min(col, GRID_COLS - 1));
+      row = Math.max(0, Math.min(row, GRID_ROWS - 1));
+      return row * GRID_COLS + col;
+    }
     var x = e.clientX, y = e.clientY;
     var children = container.children;
     var skip = dragIsSubpage ? 1 : 0;
@@ -2208,17 +2219,39 @@
     var grid = state.grid.slice();
     var movingSlot = grid[fromPos];
     clearSpans(grid);
-    grid[fromPos] = 0;
-    if (grid[toPos] > 0) {
-      var displaced = grid[toPos];
-      grid[toPos] = 0;
-      for (var i = 1; i < NUM_SLOTS; i++) {
-        var candidate = (toPos + i) % NUM_SLOTS;
-        if (grid[candidate] === 0) { grid[candidate] = displaced; break; }
+    if (CFG.dragMode === "swap") {
+      var targetSlot = grid[toPos];
+      grid[toPos] = movingSlot;
+      grid[fromPos] = targetSlot;
+      for (var i = 0; i < NUM_SLOTS; i++) {
+        if (grid[i] > 0 && state.sizes[grid[i]] === 2) {
+          var below = i + GRID_COLS;
+          if (below < NUM_SLOTS) {
+            if (grid[below] > 0) {
+              var displaced = grid[below];
+              grid[below] = -1;
+              for (var j = 0; j < NUM_SLOTS; j++) {
+                if (grid[j] === 0) { grid[j] = displaced; break; }
+              }
+            } else {
+              grid[below] = -1;
+            }
+          }
+        }
       }
+    } else {
+      grid[fromPos] = 0;
+      if (grid[toPos] > 0) {
+        var displaced = grid[toPos];
+        grid[toPos] = 0;
+        for (var i = 1; i < NUM_SLOTS; i++) {
+          var candidate = (toPos + i) % NUM_SLOTS;
+          if (grid[candidate] === 0) { grid[candidate] = displaced; break; }
+        }
+      }
+      grid[toPos] = movingSlot;
+      applySpans(grid);
     }
-    grid[toPos] = movingSlot;
-    applySpans(grid);
     state.grid = grid;
   }
 
@@ -2229,23 +2262,52 @@
     var grid = sp.grid.slice();
     var movingSlot = grid[fromPos];
     clearSpans(grid);
-    grid[fromPos] = 0;
-    if (grid[toPos] > 0) {
-      var displaced = grid[toPos];
-      grid[toPos] = 0;
-      for (var i = 1; i < maxPos; i++) {
-        var candidate = (toPos + i) % maxPos;
-        if (grid[candidate] === 0) { grid[candidate] = displaced; break; }
+    if (CFG.dragMode === "swap") {
+      var targetSlot = grid[toPos];
+      grid[toPos] = movingSlot;
+      grid[fromPos] = targetSlot;
+      for (var i = 0; i < maxPos; i++) {
+        if (grid[i] > 0 && sp.sizes[grid[i]] === 2) {
+          var below = i + GRID_COLS;
+          if (below < maxPos) {
+            if (grid[below] > 0) {
+              var displaced = grid[below];
+              grid[below] = -1;
+              for (var j = 0; j < maxPos; j++) {
+                if (grid[j] === 0) { grid[j] = displaced; break; }
+              }
+            } else {
+              grid[below] = -1;
+            }
+          }
+        }
       }
-    }
-    grid[toPos] = movingSlot;
-    for (var i = 0; i < maxPos; i++) {
-      if (grid[i] > 0 && sp.sizes[grid[i]] === 2) {
-        var below = i + GRID_COLS;
-        if (below < maxPos) grid[below] = -1;
+    } else {
+      grid[fromPos] = 0;
+      if (grid[toPos] > 0) {
+        var displaced = grid[toPos];
+        grid[toPos] = 0;
+        for (var i = 1; i < maxPos; i++) {
+          var candidate = (toPos + i) % maxPos;
+          if (grid[candidate] === 0) { grid[candidate] = displaced; break; }
+        }
+      }
+      grid[toPos] = movingSlot;
+      for (var i = 0; i < maxPos; i++) {
+        if (grid[i] > 0 && sp.sizes[grid[i]] === 2) {
+          var below = i + GRID_COLS;
+          if (below < maxPos) grid[below] = -1;
+        }
       }
     }
     sp.grid = grid;
+  }
+
+  function clearAllPlaceholders(container) {
+    var cells = container.children;
+    for (var i = 0; i < cells.length; i++) {
+      cells[i].classList.remove("sp-drop-placeholder");
+    }
   }
 
   function clearPlaceholder() {
@@ -2263,26 +2325,41 @@
       if (dragSrcPos < 0) return;
       e.preventDefault();
       e.dataTransfer.dropEffect = "move";
-      pendingCellIdx = getCellFromEvent(e, container);
-      if (dragRafPending) return;
-      dragRafPending = true;
-      requestAnimationFrame(function () {
-        dragRafPending = false;
-        if (pendingCellIdx === previewDropIdx) return;
-        previewDropIdx = pendingCellIdx;
-        clearPlaceholder();
-        var target = container.querySelector('[data-pos="' + pendingCellIdx + '"]');
+      if (CFG.dragAnimation) {
+        pendingCellIdx = getCellFromEvent(e, container);
+        if (dragRafPending) return;
+        dragRafPending = true;
+        requestAnimationFrame(function () {
+          dragRafPending = false;
+          if (pendingCellIdx === previewDropIdx) return;
+          previewDropIdx = pendingCellIdx;
+          clearPlaceholder();
+          var target = container.querySelector('[data-pos="' + pendingCellIdx + '"]');
+          if (target) {
+            previewPlaceholder = target;
+            previewPlaceholder.classList.add("sp-drop-placeholder");
+          }
+        });
+      } else {
+        var cellIdx = getCellFromEvent(e, container);
+        if (cellIdx === previewDropIdx) return;
+        previewDropIdx = cellIdx;
+        clearAllPlaceholders(container);
+        var target = container.querySelector('[data-pos="' + cellIdx + '"]');
         if (target) {
-          previewPlaceholder = target;
-          previewPlaceholder.classList.add("sp-drop-placeholder");
+          target.classList.add("sp-drop-placeholder");
         }
-      });
+      }
     });
 
     container.addEventListener("dragleave", function (e) {
       if (!container.contains(e.relatedTarget)) {
         previewDropIdx = -1;
-        clearPlaceholder();
+        if (CFG.dragAnimation) {
+          clearPlaceholder();
+        } else {
+          clearAllPlaceholders(container);
+        }
       }
     });
 
@@ -2290,8 +2367,12 @@
       e.preventDefault();
       var toPos = previewDropIdx;
       previewDropIdx = -1;
-      clearPlaceholder();
-      if (dragSrcEl) { dragSrcEl.classList.remove("sp-dragging"); dragSrcEl = null; }
+      if (CFG.dragAnimation) {
+        clearPlaceholder();
+        if (dragSrcEl) { dragSrcEl.classList.remove("sp-dragging"); dragSrcEl = null; }
+      } else {
+        clearAllPlaceholders(container);
+      }
       if (dragIsSubpage) {
         var maxPos = NUM_SLOTS - 1;
         if (dragSrcPos < 0 || toPos < 0 || toPos >= maxPos) { dragSrcPos = -1; dragIsSubpage = false; return; }
@@ -2316,19 +2397,25 @@
   function setupPreviewDrag(btn, pos) {
     btn.addEventListener("dragstart", function (e) {
       dragSrcPos = pos;
-      dragSrcEl = btn;
+      if (CFG.dragAnimation) dragSrcEl = btn;
       dragIsSubpage = !!state.editingSubpage;
       didDrag = true;
       e.dataTransfer.effectAllowed = "move";
       e.dataTransfer.setData("text/plain", String(pos));
-      requestAnimationFrame(function () { btn.classList.add("sp-dragging"); });
+      if (CFG.dragAnimation) {
+        requestAnimationFrame(function () { btn.classList.add("sp-dragging"); });
+      }
     });
     btn.addEventListener("dragend", function () {
       dragSrcPos = -1;
       previewDropIdx = -1;
       dragIsSubpage = false;
-      clearPlaceholder();
-      if (dragSrcEl) { dragSrcEl.classList.remove("sp-dragging"); dragSrcEl = null; }
+      if (CFG.dragAnimation) {
+        clearPlaceholder();
+        if (dragSrcEl) { dragSrcEl.classList.remove("sp-dragging"); dragSrcEl = null; }
+      } else {
+        clearAllPlaceholders(els.previewMain);
+      }
     });
   }
 

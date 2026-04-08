@@ -134,16 +134,19 @@ def sync(check_only=False):
         ),
     ]
 
+    www_js_source = ROOT / "src" / "webserver" / "www.js"
+    patches.extend([
+        (www_js_source, "GENERATED:ICONS START", "GENERATED:ICONS END", gen_www_js_icon_map),
+        (www_js_source, "GENERATED:DOMAIN_ICONS START", "GENERATED:DOMAIN_ICONS END", gen_www_js_domain_icons),
+    ])
+
     for device in DEVICES:
         slug = device["slug"]
         sensors_path = ROOT / "devices" / slug / "device" / "sensors.yaml"
-        www_js_path = ROOT / "docs" / "public" / "webserver" / slug / "www.js"
 
         patches.extend([
             (sensors_path, "GENERATED:ICONS START", "GENERATED:ICONS END", gen_sensors_icon_entries),
             (sensors_path, "GENERATED:DOMAIN_ICONS START", "GENERATED:DOMAIN_ICONS END", gen_sensors_domain_icons),
-            (www_js_path, "GENERATED:ICONS START", "GENERATED:ICONS END", gen_www_js_icon_map),
-            (www_js_path, "GENERATED:DOMAIN_ICONS START", "GENERATED:DOMAIN_ICONS END", gen_www_js_domain_icons),
         ])
 
     file_contents = {}

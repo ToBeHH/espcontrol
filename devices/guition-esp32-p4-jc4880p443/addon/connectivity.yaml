@@ -5,9 +5,10 @@
 # connection state using lvgl.page.show.
 #
 # Screen flow:
-#   loading → wifi_setup (if no WiFi)
-#           → ha_setup   (if WiFi OK but HA not connected)
-#           → button_setup (if HA OK but no buttons configured)
+#   loading → wifi_setup   (if no WiFi)
+#           → ha_setup     (if WiFi OK but HA not connected)
+#           → ha_actions   (allow device to perform HA actions)
+#           → button_setup (if no buttons configured)
 #           → main_page
 # =============================================================================
 
@@ -47,7 +48,14 @@ wifi:
 
 api:
   on_client_connected:
-    - script.execute: navigate_after_api
+    - if:
+        condition:
+          lambda: 'return lv_scr_act() == id(ha_setup_page);'
+        then:
+          - script.stop: setup_screen_dim
+          - lvgl.page.show: ha_actions_page
+          - delay: 8s
+          - script.execute: navigate_after_api
 
 script:
   - id: navigate_after_api

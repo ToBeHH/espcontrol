@@ -111,6 +111,6 @@ That's it — your panel is ready to use. See the [Setup](/features/setup) guide
 
 ## Advanced: ESPHome package install
 
-If you already use ESPHome and prefer to compile firmware yourself, see the [ESPHome Manual Setup](/advanced/esphome-manual-setup) guide. This method is for users who want full control over the build or want to extend the configuration with their own customisations.
+If you already use ESPHome and prefer to compile firmware yourself, each [screen page](/screens/jc1060p470#esphome-manual-setup) has a ready-to-use YAML snippet you can drop into your own ESPHome config.
 
 Next: [Setup](/features/setup)

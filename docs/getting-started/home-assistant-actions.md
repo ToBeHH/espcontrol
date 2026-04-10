@@ -40,6 +40,6 @@ You won't be able to control any devices, it will be in a read only state, and e
 
 ## Device not showing up?
 
-If you don't see your Espcontrol device in the ESPHome integration, it may not have been added to Home Assistant yet. Head back to the [Install](/install#add-to-home-assistant) guide to add it first.
+If you don't see your Espcontrol device in the ESPHome integration, it may not have been added to Home Assistant yet. Head back to the [Install](/getting-started/install#add-to-home-assistant) guide to add it first.
 
 

@@ -48,5 +48,5 @@ If you find this project useful, consider buying me a coffee to support ongoing 
 
 ## Next steps
 
-- [Install](/install) — what you need, how to flash, and first-time setup
-- [Setup](/setup) — how to configure buttons, display, and screensaver from your browser
+- [Install](/getting-started/install) — what you need, how to flash, and first-time setup
+- [Setup](/features/setup) — how to configure buttons, display, and screensaver from your browser

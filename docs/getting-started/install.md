@@ -66,7 +66,7 @@ Once the display is on your WiFi network, Home Assistant should discover it auto
 2. **Look for a notification** in the bottom left — it should say a new device was discovered. If you don't see one, go to **Settings > Devices & Services** and look for a new **ESPHome** entry.
 3. **Click "Configure"** and follow the prompts to add the device.
 
-This connection is how the display gets the current time, temperature data, and the ability to control your devices. After adding the device, you need to [allow it to perform Home Assistant actions](/home-assistant-actions) so the touchscreen can control your devices.
+This connection is how the display gets the current time, temperature data, and the ability to control your devices. After adding the device, you need to [allow it to perform Home Assistant actions](/getting-started/home-assistant-actions) so the touchscreen can control your devices.
 
 ## Configure your panel
 
@@ -78,7 +78,7 @@ With the display connected to WiFi and paired with Home Assistant, you're ready 
 4. **Adjust your settings.** On the **Settings** tab, set your button colours, temperatures, screensaver timeout, brightness, and more.
 5. **Tap "Apply Configuration"** when you're done. The display restarts with your new settings.
 
-That's it — your panel is ready to use. See the [Setup](/setup) guide for a full walkthrough of every setting.
+That's it — your panel is ready to use. See the [Setup](/features/setup) guide for a full walkthrough of every setting.
 
 ## Troubleshooting
 
@@ -111,6 +111,6 @@ That's it — your panel is ready to use. See the [Setup](/setup) guide for a fu
 
 ## Advanced: ESPHome package install
 
-If you already use ESPHome and prefer to compile firmware yourself, see the [ESPHome Manual Setup](/esphome-manual-setup) guide. This method is for users who want full control over the build or want to extend the configuration with their own customisations.
+If you already use ESPHome and prefer to compile firmware yourself, see the [ESPHome Manual Setup](/advanced/esphome-manual-setup) guide. This method is for users who want full control over the build or want to extend the configuration with their own customisations.
 
-Next: [Setup](/setup)
+Next: [Setup](/features/setup)

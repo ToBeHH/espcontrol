@@ -6,7 +6,7 @@ description:
 
 # Display & Screensaver
 
-These settings control what the panel shows on screen and how it behaves when you're not using it. You'll find all of these in the **Settings** tab on the [Setup](/setup).
+These settings control what the panel shows on screen and how it behaves when you're not using it. You'll find all of these in the **Settings** tab on the [Setup](/features/setup).
 
 ## Temperature display
 

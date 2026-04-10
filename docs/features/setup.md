@@ -51,7 +51,7 @@ You can move buttons around by cutting and pasting. Right-click a button, choose
 
 When you tap a button to select it, a settings panel appears below the preview:
 
-- **Type** — choose **Toggle** (the default — turns a device on and off) or **Subpage** (opens a page of more buttons). See [Buttons & Icons](/buttons-and-icons#button-types) for more.
+- **Type** — choose **Toggle** (the default — turns a device on and off) or **Subpage** (opens a page of more buttons). See [Buttons & Icons](/features/buttons-and-icons#button-types) for more.
 - **Label** — a custom name for the button. Leave it blank to use the device's name from Home Assistant.
 - **Entity** — which Home Assistant device the button controls (for example, `light.living_room`). You can find this in Home Assistant under **Settings > Devices & Services**. Only shown for Toggle buttons.
 - **Icon** — pick from hundreds of icons, or choose **Auto** to let the panel pick one based on the device type (lights get a lightbulb, fans get a fan, and so on).
@@ -83,7 +83,7 @@ If there's already a button in the space below, it gets moved to the next availa
 
 ## Settings tab
 
-See [Settings](/settings) for appearance, brightness, temperature, screensaver, backup, and firmware options.
+See [Settings](/features/settings) for appearance, brightness, temperature, screensaver, backup, and firmware options.
 
 ## Logs tab
 

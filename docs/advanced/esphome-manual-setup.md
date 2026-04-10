@@ -6,7 +6,7 @@ description:
 
 # ESPHome Manual Setup
 
-If you already use ESPHome and prefer to compile firmware yourself, you can install Espcontrol as a remote package instead of using the [browser-based installer](/install). This gives you full control over the build and lets you extend the configuration with your own customisations.
+If you already use ESPHome and prefer to compile firmware yourself, you can install Espcontrol as a remote package instead of using the [browser-based installer](/getting-started/install). This gives you full control over the build and lets you extend the configuration with your own customisations.
 
 ## What you need
 
@@ -99,9 +99,9 @@ ESPHome compiles the firmware, pulls in all remote packages from GitHub, and fla
 
 The display behaves exactly as if you'd used the browser installer:
 
-1. It creates a WiFi hotspot if it can't connect to your network — follow the [WiFi setup steps](/install#connect-to-wifi).
-2. Home Assistant discovers it automatically — follow [Add to Home Assistant](/install#add-to-home-assistant).
-3. Configure buttons, display, and settings from the built-in [Setup](/setup).
+1. It creates a WiFi hotspot if it can't connect to your network — follow the [WiFi setup steps](/getting-started/install#connect-to-wifi).
+2. Home Assistant discovers it automatically — follow [Add to Home Assistant](/getting-started/install#add-to-home-assistant).
+3. Configure buttons, display, and settings from the built-in [Setup](/features/setup).
 
 ## Adding your own customisations
 

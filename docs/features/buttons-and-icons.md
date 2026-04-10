@@ -10,7 +10,7 @@ Your panel has a grid of button spaces — **20** on the 7-inch, **15** on the 4
 
 ## Setting up a button
 
-From the [Setup](/setup) **Screen** tab:
+From the [Setup](/features/setup) **Screen** tab:
 
 1. **Tap an empty space** in the grid to add a new button.
 2. **Choose a type** — **Toggle** (the default) to control a device, or **Subpage** to create a page of extra buttons.
@@ -70,7 +70,7 @@ When you set a button's icon to **Auto**, the panel picks an appropriate icon ba
 | Binary sensor (motion, door) | Motion sensor |
 | Anything else | Gear |
 
-If you'd rather pick a specific icon, the dropdown offers hundreds of choices covering lighting, climate, security, weather, media, and more. Type to search by name. Browse the full list on the [Icon Reference](/icons) page.
+If you'd rather pick a specific icon, the dropdown offers hundreds of choices covering lighting, climate, security, weather, media, and more. Type to search by name. Browse the full list on the [Icon Reference](/reference/icons) page.
 
 ## When Entity On
 

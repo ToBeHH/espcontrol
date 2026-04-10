@@ -31,7 +31,7 @@ The panel's built-in web page loads some visual resources from the internet. If 
 
 ## How do I reset the device?
 
-To start completely fresh, re-flash the firmware using the [install guide](/install). Connect the panel to your computer with a USB-C cable and use the web installer. This will reset WiFi settings and the panel will create its setup hotspot again.
+To start completely fresh, re-flash the firmware using the [install guide](/getting-started/install). Connect the panel to your computer with a USB-C cable and use the web installer. This will reset WiFi settings and the panel will create its setup hotspot again.
 
 Your button configuration is stored separately and will be preserved unless you change it through the web page.
 
@@ -57,7 +57,7 @@ To update manually:
 3. Under **Firmware**, press **Check for Update**.
 4. If a new version is available, the panel will download and install it.
 
-See [Firmware Updates](/firmware-updates) for more details.
+See [Firmware Updates](/features/firmware-updates) for more details.
 
 ## What if the icon I need isn't listed?
 
@@ -71,15 +71,15 @@ The home screen has a grid of buttons sized to fill the screen:
 - **4.3-inch JC4880P443** — 15 buttons (5 rows, 3 columns)
 - **4-inch 4848S040** — 9 buttons (3 rows, 3 columns)
 
-You can have even more using **subpages**. Any button can be turned into a folder that opens a new page of buttons. So you could have 20 buttons on the home screen, and each one could open a subpage with up to 19 more. See [Buttons & Icons — Subpages](/buttons-and-icons#subpages) for details.
+You can have even more using **subpages**. Any button can be turned into a folder that opens a new page of buttons. So you could have 20 buttons on the home screen, and each one could open a subpage with up to 19 more. See [Buttons & Icons — Subpages](/features/buttons-and-icons#subpages) for details.
 
 ## What are subpages?
 
-Subpages are like folders for your buttons. Set any button to the **Subpage** type and it becomes a folder — tapping it on the panel opens a new page with its own set of buttons. This is great for grouping controls by room or device type without filling up the home screen. Each subpage has its own buttons, icons, and labels, set up the same way as the home screen. See [Buttons & Icons — Subpages](/buttons-and-icons#subpages).
+Subpages are like folders for your buttons. Set any button to the **Subpage** type and it becomes a folder — tapping it on the panel opens a new page with its own set of buttons. This is great for grouping controls by room or device type without filling up the home screen. Each subpage has its own buttons, icons, and labels, set up the same way as the home screen. See [Buttons & Icons — Subpages](/features/buttons-and-icons#subpages).
 
 ## Can I back up my setup?
 
-Yes. In the [Setup](/setup) **Settings** tab, under **Backup**, you can **Export** your entire setup (buttons, subpages, colours, and display settings) as a file. To restore it later, use **Import** to load the saved file. You can also use this to copy your setup to a different panel — the import will rearrange buttons automatically if the panels are different sizes.
+Yes. In the [Setup](/features/setup) **Settings** tab, under **Backup**, you can **Export** your entire setup (buttons, subpages, colours, and display settings) as a file. To restore it later, use **Import** to load the saved file. You can also use this to copy your setup to a different panel — the import will rearrange buttons automatically if the panels are different sizes.
 
 ## Which panels are supported?
 
@@ -99,7 +99,7 @@ Espcontrol is built specifically for Home Assistant. It does not support other p
 
 - Give it up to **60 seconds** on first boot. It needs time to connect to WiFi and download resources.
 - If it stays on the loading screen, **power-cycle** the panel (unplug and re-plug the USB-C cable).
-- If the WiFi hotspot appears after restarting, the panel couldn't connect to your network — go through the [WiFi setup](/install#connect-to-wifi) again.
+- If the WiFi hotspot appears after restarting, the panel couldn't connect to your network — go through the [WiFi setup](/getting-started/install#connect-to-wifi) again.
 
 ## How is my data handled?
 

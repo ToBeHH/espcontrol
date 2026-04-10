@@ -125,7 +125,7 @@ export default defineConfig({
 
   themeConfig: {
     nav: [
-      { text: 'Install', link: '/install' },
+      { text: 'Install', link: '/getting-started/install' },
       { text: 'Docs', link: '/' },
       { text: 'GitHub', link: 'https://github.com/jtenniswood/espcontrol' },
     ],
@@ -135,8 +135,8 @@ export default defineConfig({
         text: 'Getting Started',
         items: [
           { text: 'Overview', link: '/' },
-          { text: 'Install', link: '/install' },
-          { text: 'Home Assistant Actions', link: '/home-assistant-actions' },
+          { text: 'Install', link: '/getting-started/install' },
+          { text: 'Home Assistant Actions', link: '/getting-started/home-assistant-actions' },
         ],
       },
       {
@@ -150,26 +150,26 @@ export default defineConfig({
       {
         text: 'Features',
         items: [
-          { text: 'Setup', link: '/setup' },
-          { text: 'Settings', link: '/settings' },
-          { text: 'Buttons & Icons', link: '/buttons-and-icons' },
-          { text: 'Display & Screensaver', link: '/display-screensaver' },
-          { text: 'Backlight Schedule', link: '/backlight-schedule' },
-          { text: 'Firmware Updates', link: '/firmware-updates' },
+          { text: 'Setup', link: '/features/setup' },
+          { text: 'Settings', link: '/features/settings' },
+          { text: 'Buttons & Icons', link: '/features/buttons-and-icons' },
+          { text: 'Display & Screensaver', link: '/features/display-screensaver' },
+          { text: 'Backlight Schedule', link: '/features/backlight-schedule' },
+          { text: 'Firmware Updates', link: '/features/firmware-updates' },
         ],
       },
       {
         text: 'Reference',
         items: [
-          { text: 'Icon Reference', link: '/icons' },
-          { text: 'FAQ', link: '/faq' },
-          { text: 'Roadmap', link: '/roadmap' },
+          { text: 'Icon Reference', link: '/reference/icons' },
+          { text: 'FAQ', link: '/reference/faq' },
+          { text: 'Roadmap', link: '/reference/roadmap' },
         ],
       },
       {
         text: 'Advanced',
         items: [
-          { text: 'ESPHome Manual Setup', link: '/esphome-manual-setup' },
+          { text: 'ESPHome Manual Setup', link: '/advanced/esphome-manual-setup' },
         ],
       },
     ],

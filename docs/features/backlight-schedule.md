@@ -16,7 +16,7 @@ The transition is checked every 60 seconds and happens automatically. At midnigh
 
 ## Settings
 
-These are configured from the **Settings** tab in the [Setup](/setup), under the **Brightness** section.
+These are configured from the **Settings** tab in the [Setup](/features/setup), under the **Brightness** section.
 
 - **Timezone** — select your timezone so the panel can calculate sunrise and sunset for your location. This is the only setting you need to configure for the brightness schedule to work.
 - **Daytime brightness** — how bright the screen should be during the day. Range: 10%–100%, default: 100%.

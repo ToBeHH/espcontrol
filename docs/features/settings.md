@@ -6,7 +6,7 @@ description:
 
 # Settings
 
-The Settings tab in the [Setup](/setup) lets you adjust how your panel looks and behaves. Each section can be expanded or collapsed by tapping its heading.
+The Settings tab in the [Setup](/features/setup) lets you adjust how your panel looks and behaves. Each section can be expanded or collapsed by tapping its heading.
 
 ## Appearance
 

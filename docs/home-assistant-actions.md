@@ -16,7 +16,7 @@ Your display will prompt you to do this during first-time setup. Follow the step
 
 ![Home Assistant discovering the Espcontrol device](/ha-actions-step-1.png)
 
-2. **Find the ESPHome integration** and click on it.
+2. **Find the ESPHome integration** and click on the top half (ESPHome > ), if you click on the number of devices, you'll end up on a different view.
 
 ![ESPHome integration showing connected devices](/ha-actions-step-2.png)
 
@@ -36,9 +36,7 @@ You only need to do this once per device. The setting persists across firmware u
 
 ## What if I skip this?
 
-The display will still work — it will show the time, screensaver, and backlight schedule as normal. However, any buttons you configure to control Home Assistant entities (lights, switches, scenes, etc.) won't do anything when tapped.
-
-You can enable this setting at any time by following the steps above.
+You won't be able to control any devices, it will be in a read only state, and entities such as lights, switches, and scenes, won't do anything when tapped.
 
 ## Device not showing up?
 

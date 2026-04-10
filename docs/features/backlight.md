@@ -6,27 +6,25 @@ description:
 
 # Backlight
 
-Your panel can automatically adjust its screen brightness based on the time of day — brighter during daylight hours and dimmer at night. This is especially useful for panels in bedrooms or hallways where a bright screen at night would be distracting.
+The panel automatically adjusts screen brightness based on time of day — brighter during daylight, dimmer at night.
 
 ## How it works
 
-The panel calculates sunrise and sunset times on-device using your selected timezone. It uses the timezone to look up approximate coordinates for your region, then runs a NOAA solar algorithm to determine when the sun rises and sets each day. During daylight hours (between sunrise and sunset), it uses your **daytime brightness** setting. At night, it switches to your **nighttime brightness** setting.
-
-The transition is checked every 60 seconds and happens automatically. At midnight, sunrise and sunset are recalculated for the new day. No internet connection or Home Assistant is needed for the brightness schedule to work — it runs entirely on the device.
+Sunrise and sunset times are calculated on-device from your selected timezone using a NOAA solar algorithm. During the day, the panel uses your **daytime brightness**; at night, it switches to **nighttime brightness**. The transition is checked every 60 seconds, and sunrise/sunset are recalculated at midnight. No internet connection or Home Assistant is required.
 
 ## Settings
 
-These are configured from the **Settings** tab in the [Setup](/features/setup), under the **Brightness** section.
+Configured in the **Brightness** section of the **Settings** tab in [Setup](/features/setup).
 
-- **Timezone** — select your timezone so the panel can calculate sunrise and sunset for your location. This is the only setting you need to configure for the brightness schedule to work.
-- **Daytime brightness** — how bright the screen should be during the day. Range: 10%–100%, default: 100%.
-- **Nighttime brightness** — how bright the screen should be at night. Range: 10%–100%, default: 75%.
-- **Sunrise / Sunset** — these are shown for reference so you can see when the brightness will change. They update automatically each day based on your timezone.
+- **Timezone** — determines sunrise/sunset for your location. The only required setting.
+- **Daytime brightness** — screen brightness during the day (10%–100%, default 100%).
+- **Nighttime brightness** — screen brightness at night (10%–100%, default 75%).
+- **Sunrise / Sunset** — read-only reference values, updated daily.
 
-## Screensaver and brightness
+## Screensaver
 
-When the screensaver is active, the backlight turns off regardless of the brightness schedule. When the panel wakes up (by touch or presence sensor), it returns to the correct brightness for the current time of day.
+When the screensaver is active, the backlight turns off. On wake (touch or presence sensor), brightness returns to the correct level for the current time.
 
-## If sunrise and sunset aren't available
+## Before clock sync
 
-If the panel hasn't synced its clock yet (for example, during initial setup before connecting to Home Assistant), it defaults to using the **daytime brightness** setting at all times. Once the time syncs, sunrise and sunset are calculated immediately.
+If the panel hasn't synced its clock yet, it defaults to daytime brightness. Once synced, sunrise and sunset are calculated immediately.

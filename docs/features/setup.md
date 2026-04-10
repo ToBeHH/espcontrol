@@ -1,10 +1,10 @@
 ---
-title: Configuration
+title: Screen Setup
 description:
   How to use the built-in web page to configure buttons, icons, display settings, screensaver, and brightness on your Espcontrol panel.
 ---
 
-# Device Configuration
+# Setting up your device's screen
 
 Your Espcontrol panel has a built-in web page where you can set everything up. Open it by typing the panel's address into any browser on your phone or computer.
 

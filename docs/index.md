@@ -1,8 +1,7 @@
 ---
 title: Espcontrol — Home Assistant touch control panel
 titleTemplate: :title
-description:
-  Touchscreen control panel for Home Assistant: up to 20 buttons with subpages, web-based configuration, automatic firmware updates.
+description: "Touchscreen control panel for Home Assistant: up to 20 buttons with subpages, web-based configuration, automatic firmware updates."
 ---
 
 ![Espcontrol on a 7-inch touchscreen: home screen with temperature, clock, and control tiles](/home_screen_hero.jpg)

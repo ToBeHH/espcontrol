@@ -28,6 +28,12 @@ export default defineConfig({
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:locale', content: 'en_US' }],
     ['meta', { property: 'og:site_name', content: 'Espcontrol' }],
+    ['meta', { property: 'og:image', content: `${hostname}home_screen_hero.jpg` }],
+    ['meta', { property: 'og:image:width', content: '1024' }],
+    ['meta', { property: 'og:image:height', content: '902' }],
+    ['meta', { property: 'og:image:type', content: 'image/jpeg' }],
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+    ['meta', { name: 'twitter:image', content: `${hostname}home_screen_hero.jpg` }],
     ['script', {
       'data-name': 'BMC-Widget',
       'data-cfasync': 'false',
@@ -97,7 +103,7 @@ export default defineConfig({
     )
 
     if (pageData.relativePath !== 'index.md' && title && description) {
-      const isHowTo = pageData.relativePath === 'install.md'
+      const isHowTo = pageData.relativePath === 'getting-started/install.md'
       const articleSchema: Record<string, unknown> = {
         '@context': 'https://schema.org',
         '@type': isHowTo ? 'HowTo' : 'TechArticle',
@@ -166,12 +172,6 @@ export default defineConfig({
           { text: 'Icon Reference', link: '/reference/icons' },
           { text: 'FAQ', link: '/reference/faq' },
           { text: 'Roadmap', link: '/reference/roadmap' },
-        ],
-      },
-      {
-        text: 'Advanced',
-        items: [
-          { text: 'ESPHome Manual Setup', link: '/advanced/esphome-manual-setup' },
         ],
       },
     ],

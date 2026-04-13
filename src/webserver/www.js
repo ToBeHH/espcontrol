@@ -274,12 +274,14 @@
     ".sp-action-btn{padding:10px 20px;border:none;border-radius:6px;font-size:.9rem;" +
     "font-weight:500;cursor:pointer;font-family:inherit;transition:background .2s,opacity .2s}" +
     ".sp-action-btn:active{opacity:.8}" +
-    ".sp-delete-btn{background:var(--danger);color:#fff}" +
+    ".sp-delete-btn{background:var(--surface2);color:var(--text2);display:inline-flex;align-items:center;gap:6px}" +
+    ".sp-delete-btn:hover{background:var(--border);color:var(--text)}" +
     ".sp-save-btn{background:var(--accent);color:#fff}" +
     ".sp-save-btn:hover{background:var(--accent-hover)}" +
     ".sp-edit-subpage-btn{background:var(--surface2);color:var(--text)}" +
     ".sp-edit-subpage-btn:hover{background:var(--border)}" +
     ".sp-btn-row--save{margin-top:24px;justify-content:flex-end}" +
+    ".sp-btn-row--save.sp-has-delete{justify-content:space-between}" +
 
     ".sp-toggle-row{display:flex;align-items:center;justify-content:space-between;" +
     "min-height:36px;margin-bottom:14px}" +
@@ -1928,20 +1930,18 @@
       });
     }
 
-    // Delete button (subpage only)
-    if (c.isSub) {
-      var btnRow = document.createElement("div");
-      btnRow.className = "sp-btn-row";
-      var delBtn = document.createElement("button");
-      delBtn.className = "sp-action-btn sp-delete-btn";
-      delBtn.textContent = "Delete";
-      delBtn.addEventListener("click", function () { deleteSlot(slot); });
-      btnRow.appendChild(delBtn);
-      panel.appendChild(btnRow);
-    }
-
     var saveRow = document.createElement("div");
     saveRow.className = "sp-btn-row sp-btn-row--save";
+
+    if (c.isSub) {
+      var delBtn = document.createElement("button");
+      delBtn.className = "sp-action-btn sp-delete-btn";
+      delBtn.innerHTML = '<span class="mdi mdi-trash-can-outline"></span>Delete';
+      delBtn.addEventListener("click", function () { deleteSlot(slot); });
+      saveRow.appendChild(delBtn);
+      saveRow.classList.add("sp-has-delete");
+    }
+
     var editSubBtn = panel.querySelector(".sp-edit-subpage-btn");
     if (editSubBtn) saveRow.appendChild(editSubBtn);
     var saveBtn = document.createElement("button");

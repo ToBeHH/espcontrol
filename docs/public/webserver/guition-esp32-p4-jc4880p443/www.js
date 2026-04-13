@@ -207,19 +207,13 @@
       var displayStateToggle = helpers.toggleRow("Display State", helpers.idPrefix + "whenon-toggle", displayStateEnabled);
       panel.appendChild(displayStateToggle.row);
 
-      displayStateToggle.input.addEventListener("change", function () {
-        if (this.checked) {
-          b.sensor = "indicator";
-          helpers.saveField("sensor", "indicator");
-        } else {
-          b.sensor = "";
-          helpers.saveField("sensor", "");
-        }
-      });
-
       var hasIconOn = b.icon_on && b.icon_on !== "Auto";
-      var iconOnToggle = helpers.toggleRow("Icon When On", helpers.idPrefix + "iconon-toggle", hasIconOn);
-      panel.appendChild(iconOnToggle.row);
+
+      var iconOnWrap = condField();
+      if (displayStateEnabled) iconOnWrap.classList.add("sp-visible");
+
+      var iconOnToggle = helpers.toggleRow("Change Icon When On", helpers.idPrefix + "iconon-toggle", hasIconOn);
+      iconOnWrap.appendChild(iconOnToggle.row);
 
       var iconOnCond = condField();
       if (hasIconOn) iconOnCond.classList.add("sp-visible");
@@ -245,7 +239,8 @@
         renderPreview();
       });
 
-      panel.appendChild(iconOnCond);
+      iconOnWrap.appendChild(iconOnCond);
+      panel.appendChild(iconOnWrap);
 
       iconOnToggle.input.addEventListener("change", function () {
         if (this.checked) {
@@ -259,6 +254,29 @@
           var ionInput = iconOnPicker.querySelector(".sp-icon-picker-input");
           if (ionInput) ionInput.value = "Auto";
           renderPreview();
+        }
+      });
+
+      displayStateToggle.input.addEventListener("change", function () {
+        if (this.checked) {
+          b.sensor = "indicator";
+          helpers.saveField("sensor", "indicator");
+          iconOnWrap.classList.add("sp-visible");
+        } else {
+          b.sensor = "";
+          helpers.saveField("sensor", "");
+          iconOnWrap.classList.remove("sp-visible");
+          if (iconOnToggle.input.checked) {
+            iconOnToggle.input.checked = false;
+            b.icon_on = "Auto";
+            helpers.saveField("icon_on", "Auto");
+            iconOnCond.classList.remove("sp-visible");
+            var ionPreview = iconOnPicker.querySelector(".sp-icon-picker-preview");
+            if (ionPreview) ionPreview.className = "sp-icon-picker-preview mdi mdi-cog";
+            var ionInput = iconOnPicker.querySelector(".sp-icon-picker-input");
+            if (ionInput) ionInput.value = "Auto";
+            renderPreview();
+          }
         }
       });
 

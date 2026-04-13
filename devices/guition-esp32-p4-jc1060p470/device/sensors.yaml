@@ -107,6 +107,8 @@ esphome:
                   std::string token = order_str.substr(start, comma - start);
                   bool dbl = !token.empty() && token.back() == 'd';
                   bool wide = !token.empty() && token.back() == 'w';
+                  bool big = !token.empty() && token.back() == 'b';
+                  if (big) { dbl = true; wide = true; }
                   if (dbl || wide) token.pop_back();
                   int v = atoi(token.c_str());
                   if (v >= 1 && v <= NUM_SLOTS) { positions[gpos] = v; is_double[v - 1] = dbl; is_wide[v - 1] = wide; }
@@ -121,6 +123,9 @@ esphome:
               }
               if (positions[p] > 0 && is_wide[positions[p] - 1] && (p + 1) % COLS != 0 && p + 1 < NUM_SLOTS) {
                 positions[p + 1] = 0;
+              }
+              if (positions[p] > 0 && is_double[positions[p] - 1] && is_wide[positions[p] - 1] && (p + 1) % COLS != 0 && p + COLS + 1 < NUM_SLOTS) {
+                positions[p + COLS + 1] = 0;
               }
             }
 
@@ -962,14 +967,16 @@ esphome:
                   if (cm == std::string::npos) cm = sp_order_str.length();
                   if (cm > st2) {
                     std::string tk = sp_order_str.substr(st2, cm - st2);
-                    if (tk == "B" || tk == "Bd" || tk == "Bw") {
+                    if (tk == "B" || tk == "Bd" || tk == "Bw" || tk == "Bb") {
                       back_pos = gp2;
-                      back_dbl = (tk == "Bd");
-                      back_wide = (tk == "Bw");
+                      back_dbl = (tk == "Bd" || tk == "Bb");
+                      back_wide = (tk == "Bw" || tk == "Bb");
                       has_back_token = true;
                     } else {
                       bool d = !tk.empty() && tk.back() == 'd';
                       bool w = !tk.empty() && tk.back() == 'w';
+                      bool bg = !tk.empty() && tk.back() == 'b';
+                      if (bg) { d = true; w = true; }
                       if (d || w) tk.pop_back();
                       int v = atoi(tk.c_str());
                       if (v >= 1 && v <= (int)sp_btns.size()) { sp_pos[gp2] = v; sp_dbl[v - 1] = d; sp_wide[v - 1] = w; }

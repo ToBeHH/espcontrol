@@ -2309,6 +2309,47 @@
     selectButton(newSlot);
   }
 
+  function duplicateSubpageButton(srcSlot) {
+    var homeSlot = state.editingSubpage;
+    var sp = getSubpage(homeSlot);
+    var newSlot = subpageFirstFreeSlot(sp);
+    while (sp.buttons.length < newSlot) {
+      sp.buttons.push({ entity: "", label: "", icon: "Auto", icon_on: "Auto", sensor: "", unit: "" });
+    }
+
+    var src = sp.buttons[srcSlot - 1];
+    sp.buttons[newSlot - 1] = {
+      entity: src.entity, label: src.label, icon: src.icon,
+      icon_on: src.icon_on, sensor: src.sensor, unit: src.unit,
+    };
+
+    var srcSz = sp.sizes[srcSlot];
+    if (srcSz) sp.sizes[newSlot] = srcSz;
+
+    var srcPos = sp.grid.indexOf(srcSlot);
+    var newPos = -1;
+    for (var c = srcPos + 1; c < NUM_SLOTS; c++) {
+      if (sp.grid[c] === 0) { newPos = c; break; }
+    }
+    if (newPos < 0) return;
+    sp.grid[newPos] = newSlot;
+    if (sp.sizes[newSlot] === 2) {
+      var below = newPos + GRID_COLS;
+      if (below < NUM_SLOTS && sp.grid[below] === 0) sp.grid[below] = -1;
+    }
+    if (sp.sizes[newSlot] === 3) {
+      var right = newPos + 1;
+      if (right < NUM_SLOTS && right % GRID_COLS !== 0 && sp.grid[right] === 0) sp.grid[right] = -1;
+    }
+
+    sp.order = serializeSubpageGrid(sp);
+    saveSubpageConfig(homeSlot);
+    state.subpageSelectedSlots = [newSlot];
+    state.subpageLastClicked = newSlot;
+    renderPreview();
+    renderButtonSettings();
+  }
+
   function deleteSlot(slot) {
     var c = ctx();
     for (var i = 0; i < c.maxSlots; i++) {
@@ -2511,9 +2552,9 @@
         renderButtonSettings();
       });
 
-      if (!c.isSub) {
-        addCtxItem("content-copy", "Duplicate", function () { duplicateButton(slot); });
-      }
+      addCtxItem("content-copy", "Duplicate", function () {
+        if (c.isSub) { duplicateSubpageButton(slot); } else { duplicateButton(slot); }
+      });
 
       addCtxItem("content-cut", "Cut", function () { cutSlot(slot); });
       addCtxDivider();

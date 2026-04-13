@@ -2289,6 +2289,7 @@
         dragRafPending = true;
         requestAnimationFrame(function () {
           dragRafPending = false;
+          if (dragSrcPos < 0) return;
           updatePlaceholder(pendingCellIdx);
         });
       } else {
@@ -2737,10 +2738,10 @@
 
       var sz = c.sizes[slot] || 1;
       addCtxSubmenu("arrow-expand-all", "Size", function (sub) {
-        addSubItem(sub, "", "1\u00d71", function () { resizeSlot(slot, 1); }, sz === 1);
-        addSubItem(sub, "", "2\u00d71", function () { resizeSlot(slot, 2); }, sz === 2);
-        addSubItem(sub, "", "1\u00d72", function () { resizeSlot(slot, 3); }, sz === 3);
-        addSubItem(sub, "", "2\u00d72", function () { resizeSlot(slot, 4); }, sz === 4);
+        addSubItem(sub, "", "Single", function () { resizeSlot(slot, 1); }, sz === 1);
+        addSubItem(sub, "", "Tall", function () { resizeSlot(slot, 2); }, sz === 2);
+        addSubItem(sub, "", "Wide", function () { resizeSlot(slot, 3); }, sz === 3);
+        addSubItem(sub, "", "Large", function () { resizeSlot(slot, 4); }, sz === 4);
       });
 
       addCtxDivider();
@@ -2764,10 +2765,10 @@
     var sp = getSubpage(state.editingSubpage);
     var bkSz = sp.sizes[-2] || 1;
     addCtxSubmenu("arrow-expand-all", "Size", function (sub) {
-      addSubItem(sub, "", "1\u00d71", function () { resizeSlot(-2, 1); }, bkSz === 1);
-      addSubItem(sub, "", "2\u00d71", function () { resizeSlot(-2, 2); }, bkSz === 2);
-      addSubItem(sub, "", "1\u00d72", function () { resizeSlot(-2, 3); }, bkSz === 3);
-      addSubItem(sub, "", "2\u00d72", function () { resizeSlot(-2, 4); }, bkSz === 4);
+      addSubItem(sub, "", "Single", function () { resizeSlot(-2, 1); }, bkSz === 1);
+      addSubItem(sub, "", "Tall", function () { resizeSlot(-2, 2); }, bkSz === 2);
+      addSubItem(sub, "", "Wide", function () { resizeSlot(-2, 3); }, bkSz === 3);
+      addSubItem(sub, "", "Large", function () { resizeSlot(-2, 4); }, bkSz === 4);
     });
     document.body.appendChild(ctxMenu);
     positionMenu(ctxMenu, e);

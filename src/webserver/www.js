@@ -713,22 +713,27 @@
       var hasBack = false;
       for (var i = 0; i < sp.order.length; i++) {
         var t = sp.order[i];
-        if (t === "B" || t === "Bd") { hasBack = true; break; }
+        if (t === "B" || t === "Bd" || t === "Bw") { hasBack = true; break; }
       }
       if (hasBack) {
         for (var i = 0; i < sp.order.length && i < NUM_SLOTS; i++) {
           var s = sp.order[i];
           if (!s) continue;
-          if (s === "B" || s === "Bd") {
+          if (s === "B" || s === "Bd" || s === "Bw") {
             grid[i] = -2;
-            if (s === "Bd") sp.sizes[-2] = 2; else delete sp.sizes[-2];
+            if (s === "Bd") sp.sizes[-2] = 2;
+            else if (s === "Bw") sp.sizes[-2] = 3;
+            else delete sp.sizes[-2];
             continue;
           }
-          var dbl = s.charAt(s.length - 1) === "d";
+          var last = s.charAt(s.length - 1);
+          var dbl = last === "d";
+          var wide = last === "w";
           var n = parseInt(s, 10);
           if (n >= 1 && n <= sp.buttons.length && !isNaN(n)) {
             grid[i] = n;
             if (dbl) sp.sizes[n] = 2;
+            else if (wide) sp.sizes[n] = 3;
           }
         }
       } else {
@@ -737,11 +742,14 @@
         for (var i = 0; i < sp.order.length && i + 1 < NUM_SLOTS; i++) {
           var s = sp.order[i];
           if (!s) continue;
-          var dbl = s.charAt(s.length - 1) === "d";
+          var last = s.charAt(s.length - 1);
+          var dbl = last === "d";
+          var wide = last === "w";
           var n = parseInt(s, 10);
           if (n >= 1 && n <= sp.buttons.length && !isNaN(n)) {
             grid[i + 1] = n;
             if (dbl) sp.sizes[n] = 2;
+            else if (wide) sp.sizes[n] = 3;
           }
         }
       }
@@ -764,11 +772,13 @@
     var order = [];
     for (var i = 0; i <= last; i++) {
       if (grid[i] === -2) {
-        order.push(sp.sizes[-2] === 2 ? "Bd" : "B");
+        var bsz = sp.sizes[-2];
+        order.push(bsz === 2 ? "Bd" : bsz === 3 ? "Bw" : "B");
       } else if (grid[i] <= 0) {
         order.push("");
       } else {
-        order.push(grid[i] + (sp.sizes[grid[i]] === 2 ? "d" : ""));
+        var ssz = sp.sizes[grid[i]];
+        order.push(grid[i] + (ssz === 2 ? "d" : ssz === 3 ? "w" : ""));
       }
     }
     return order;

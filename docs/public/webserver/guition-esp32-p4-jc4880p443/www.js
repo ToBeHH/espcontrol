@@ -243,24 +243,34 @@
       of.appendChild(seg);
       panel.appendChild(of);
 
+      var invertToggle = helpers.toggleRow("Invert Slider", helpers.idPrefix + "invert-toggle", b.invert === "1");
+      var invertCond = condField();
+      invertCond.appendChild(invertToggle.row);
+      if (isHoriz) invertCond.classList.add("sp-visible");
+      panel.appendChild(invertCond);
+      invertToggle.input.addEventListener("change", function () {
+        b.invert = this.checked ? "1" : "";
+        helpers.saveField("invert", b.invert);
+      });
+
       btnV.addEventListener("click", function () {
         btnV.classList.add("active"); btnH.classList.remove("active");
         b.sensor = "";
         helpers.saveField("sensor", "");
+        invertCond.classList.remove("sp-visible");
+        if (b.invert) {
+          b.invert = "";
+          helpers.saveField("invert", "");
+          invertToggle.input.checked = false;
+        }
         renderPreview();
       });
       btnH.addEventListener("click", function () {
         btnH.classList.add("active"); btnV.classList.remove("active");
         b.sensor = "h";
         helpers.saveField("sensor", "h");
+        invertCond.classList.add("sp-visible");
         renderPreview();
-      });
-
-      var invertToggle = helpers.toggleRow("Invert Slider", helpers.idPrefix + "invert-toggle", b.invert === "1");
-      panel.appendChild(invertToggle.row);
-      invertToggle.input.addEventListener("change", function () {
-        b.invert = this.checked ? "1" : "";
-        helpers.saveField("invert", b.invert);
       });
 
       var hasIconOn = b.icon_on && b.icon_on !== "Auto";

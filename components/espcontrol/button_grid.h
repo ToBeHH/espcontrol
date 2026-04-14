@@ -294,18 +294,18 @@ struct SliderCtx {
   lv_coord_t radius;
 };
 
-inline void slider_update_fill(lv_obj_t *fill, lv_obj_t *btn, int pct, bool horizontal, lv_coord_t r) {
+inline void slider_update_fill(lv_obj_t *fill, lv_obj_t *btn, int pct, bool horizontal, bool inverted, lv_coord_t r) {
   lv_coord_t bw = lv_obj_get_width(btn);
   lv_coord_t bh = lv_obj_get_height(btn);
   lv_obj_set_style_radius(fill, r, LV_PART_MAIN);
   if (horizontal) {
     lv_coord_t w = (lv_coord_t)((int32_t)bw * pct / 100);
     lv_obj_set_size(fill, w, bh);
-    lv_obj_align(fill, LV_ALIGN_LEFT_MID, 0, 0);
+    lv_obj_align(fill, inverted ? LV_ALIGN_RIGHT_MID : LV_ALIGN_LEFT_MID, 0, 0);
   } else {
     lv_coord_t h = (lv_coord_t)((int32_t)bh * pct / 100);
     lv_obj_set_size(fill, bw, h);
-    lv_obj_align(fill, LV_ALIGN_BOTTOM_MID, 0, 0);
+    lv_obj_align(fill, inverted ? LV_ALIGN_TOP_MID : LV_ALIGN_BOTTOM_MID, 0, 0);
   }
 }
 
@@ -381,7 +381,7 @@ inline void setup_slider_visual(BtnSlot &s, const std::string &cfg, uint32_t on_
     SliderCtx *c = (SliderCtx *)lv_obj_get_user_data(sl);
     if (!c) return;
     int val = lv_slider_get_value(sl);
-    slider_update_fill(c->fill, lv_obj_get_parent(sl), val, c->horizontal, c->radius);
+    slider_update_fill(c->fill, lv_obj_get_parent(sl), val, c->horizontal, c->inverted, c->radius);
   }, LV_EVENT_VALUE_CHANGED, nullptr);
 
   lv_obj_add_event_cb(slider, [](lv_event_t *e) {
@@ -413,7 +413,7 @@ inline void subscribe_slider_state(lv_obj_t *btn_ptr, lv_obj_t *icon_lbl,
         if (!on) {
           int z = inv ? 100 : 0;
           lv_slider_set_value(slider, z, LV_ANIM_OFF);
-          if (fill) slider_update_fill(fill, btn_ptr, z, horiz, rad);
+          if (fill) slider_update_fill(fill, btn_ptr, z, horiz, inv, rad);
         }
         if (has_icon_on) {
           lv_label_set_text(icon_lbl, on ? icon_on : icon_off);
@@ -433,7 +433,7 @@ inline void subscribe_slider_state(lv_obj_t *btn_ptr, lv_obj_t *icon_lbl,
             if (pct > 100) pct = 100;
             if (inv) pct = 100 - pct;
             lv_slider_set_value(slider, pct, LV_ANIM_OFF);
-            if (fill) slider_update_fill(fill, btn_ptr, pct, horiz, rad);
+            if (fill) slider_update_fill(fill, btn_ptr, pct, horiz, inv, rad);
           }
         })
     );
@@ -450,7 +450,7 @@ inline void subscribe_slider_state(lv_obj_t *btn_ptr, lv_obj_t *icon_lbl,
             if (pct > 100) pct = 100;
             if (inv) pct = 100 - pct;
             lv_slider_set_value(slider, pct, LV_ANIM_OFF);
-            if (fill) slider_update_fill(fill, btn_ptr, pct, horiz, rad);
+            if (fill) slider_update_fill(fill, btn_ptr, pct, horiz, inv, rad);
           }
         })
     );

@@ -1,3 +1,9 @@
+# =============================================================================
+# DEV CONFIG - Local development entry point (4.3" P4 portrait panel)
+# =============================================================================
+# Uses local component path for immediate iteration on C++ and YAML changes.
+# =============================================================================
+
 substitutions:
   name: "jc4880p443-dev"
   friendly_name: "Espcontrol JC4880P443 Dev"

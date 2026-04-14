@@ -170,7 +170,7 @@
     "container-type:inline-size;font-family:Roboto,sans-serif;user-select:none}" +
     ".sp-topbar{position:absolute;top:0;left:0;right:0;height:var(--topbar-h);" +
     "display:flex;align-items:center;padding:var(--topbar-pad);z-index:1}" +
-    ".sp-temp{color:#fff;font-size:var(--topbar-fs);white-space:nowrap;opacity:0;transition:opacity .3s}" +
+    ".sp-temp{color:#fff;font-size:var(--topbar-fs);white-space:nowrap;opacity:0;transition:opacity .3s;margin-left:1cqw}" +
     ".sp-temp.sp-visible{opacity:1}" +
     ".sp-clock{position:absolute;left:50%;transform:translateX(-50%);" +
     "color:#fff;font-size:var(--clock-fs,var(--topbar-fs));white-space:nowrap}" +

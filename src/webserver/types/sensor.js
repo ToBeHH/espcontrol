@@ -35,7 +35,8 @@ registerButtonType("sensor", {
           '<span class="sp-sensor-unit">' + unit + '</span>' +
         '</span>',
       labelHtml:
-        '<span class="sp-btn-label">' + helpers.escHtml(label) + '</span>',
+        '<span class="sp-btn-label-row"><span class="sp-btn-label">' + helpers.escHtml(label) + '</span>' +
+        '<span class="sp-subpage-badge mdi mdi-gauge"></span></span>',
     };
   },
 });

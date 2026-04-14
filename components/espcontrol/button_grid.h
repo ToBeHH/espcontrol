@@ -273,7 +273,23 @@ inline void send_slider_action(const std::string &entity_id, int brightness_pct)
 
 struct SliderCtx {
   std::string entity_id;
+  lv_obj_t *fill;
+  bool horizontal;
 };
+
+inline void slider_update_fill(lv_obj_t *fill, lv_obj_t *btn, int pct, bool horizontal) {
+  lv_coord_t bw = lv_obj_get_width(btn);
+  lv_coord_t bh = lv_obj_get_height(btn);
+  if (horizontal) {
+    lv_coord_t w = (lv_coord_t)((int32_t)bw * pct / 100);
+    lv_obj_set_size(fill, w, bh);
+    lv_obj_align(fill, LV_ALIGN_LEFT_MID, 0, 0);
+  } else {
+    lv_coord_t h = (lv_coord_t)((int32_t)bh * pct / 100);
+    lv_obj_set_size(fill, bw, h);
+    lv_obj_align(fill, LV_ALIGN_BOTTOM_MID, 0, 0);
+  }
+}
 
 inline lv_obj_t *setup_slider_widget(lv_obj_t *btn, uint32_t on_color, bool horizontal) {
   lv_coord_t btn_radius = lv_obj_get_style_radius(btn, LV_PART_MAIN);
@@ -282,32 +298,24 @@ inline lv_obj_t *setup_slider_widget(lv_obj_t *btn, uint32_t on_color, bool hori
     static_cast<lv_style_selector_t>(LV_PART_MAIN));
   lv_obj_clear_flag(btn, LV_OBJ_FLAG_CLICKABLE);
 
+  lv_obj_t *fill = lv_obj_create(btn);
+  lv_obj_set_size(fill, 0, 0);
+  lv_obj_set_style_bg_color(fill, lv_color_hex(on_color), LV_PART_MAIN);
+  lv_obj_set_style_bg_opa(fill, LV_OPA_COVER, LV_PART_MAIN);
+  lv_obj_set_style_radius(fill, btn_radius, LV_PART_MAIN);
+  lv_obj_set_style_border_width(fill, 0, LV_PART_MAIN);
+  lv_obj_set_style_pad_all(fill, 0, LV_PART_MAIN);
+  lv_obj_clear_flag(fill, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);
+
   lv_obj_t *slider = lv_slider_create(btn);
   lv_slider_set_range(slider, 0, 100);
   lv_slider_set_value(slider, 0, LV_ANIM_OFF);
-  lv_obj_update_layout(btn);
-  lv_coord_t bw = lv_obj_get_width(btn);
-  lv_coord_t bh = lv_obj_get_height(btn);
-  if (horizontal) {
-    if (bh >= bw) bh = bw - 1;
-  } else {
-    if (bw >= bh) bw = bh - 1;
-  }
-  lv_obj_set_size(slider, bw, bh);
+  lv_obj_set_size(slider, lv_pct(100), lv_pct(100));
   lv_obj_align(slider, LV_ALIGN_CENTER, 0, 0);
 
+  lv_obj_set_style_bg_opa(slider, LV_OPA_TRANSP, LV_PART_MAIN);
   lv_obj_set_style_bg_opa(slider, LV_OPA_TRANSP,
-    static_cast<lv_style_selector_t>(LV_PART_MAIN));
-  lv_obj_set_style_radius(slider, btn_radius,
-    static_cast<lv_style_selector_t>(LV_PART_MAIN));
-
-  lv_obj_set_style_bg_color(slider, lv_color_hex(on_color),
     static_cast<lv_style_selector_t>(LV_PART_INDICATOR));
-  lv_obj_set_style_bg_opa(slider, LV_OPA_COVER,
-    static_cast<lv_style_selector_t>(LV_PART_INDICATOR));
-  lv_obj_set_style_radius(slider, btn_radius,
-    static_cast<lv_style_selector_t>(LV_PART_INDICATOR));
-
   lv_obj_set_style_bg_opa(slider, LV_OPA_TRANSP,
     static_cast<lv_style_selector_t>(LV_PART_KNOB));
   lv_obj_set_style_border_width(slider, 0,
@@ -321,7 +329,8 @@ inline lv_obj_t *setup_slider_widget(lv_obj_t *btn, uint32_t on_color, bool hori
   lv_obj_set_style_height(slider, 0,
     static_cast<lv_style_selector_t>(LV_PART_KNOB));
 
-  lv_obj_move_to_index(slider, 0);
+  lv_obj_move_to_index(fill, 0);
+  lv_obj_move_to_index(slider, 1);
 
   return slider;
 }
@@ -336,9 +345,20 @@ inline void setup_slider_visual(BtnSlot &s, const std::string &cfg, uint32_t on_
   lv_obj_align(s.text_lbl, LV_ALIGN_BOTTOM_LEFT, pad, -pad);
   lv_obj_set_user_data(s.sensor_container, (void *)slider);
 
+  lv_obj_t *fill = lv_obj_get_child(s.btn, 0);
   SliderCtx *ctx = new SliderCtx();
   ctx->entity_id = cfg_field(cfg, 0);
+  ctx->fill = fill;
+  ctx->horizontal = horizontal;
   lv_obj_set_user_data(slider, (void *)ctx);
+
+  lv_obj_add_event_cb(slider, [](lv_event_t *e) {
+    lv_obj_t *sl = lv_event_get_target(e);
+    SliderCtx *c = (SliderCtx *)lv_obj_get_user_data(sl);
+    if (!c) return;
+    int val = lv_slider_get_value(sl);
+    slider_update_fill(c->fill, lv_obj_get_parent(sl), val, c->horizontal);
+  }, LV_EVENT_VALUE_CHANGED, nullptr);
 
   lv_obj_add_event_cb(slider, [](lv_event_t *e) {
     lv_obj_t *sl = lv_event_get_target(e);
@@ -355,13 +375,17 @@ inline void subscribe_slider_state(lv_obj_t *btn_ptr, lv_obj_t *icon_lbl,
                                   bool has_icon_on,
                                   const char *icon_off, const char *icon_on,
                                   const std::string &entity_id) {
+  SliderCtx *sctx = (SliderCtx *)lv_obj_get_user_data(slider);
+  lv_obj_t *fill = sctx ? sctx->fill : nullptr;
+  bool horiz = sctx ? sctx->horizontal : false;
   esphome::api::global_api_server->subscribe_home_assistant_state(
     entity_id, {},
     std::function<void(const std::string &)>(
-      [slider, icon_lbl, has_icon_on, icon_off, icon_on](const std::string &state) {
+      [slider, btn_ptr, fill, horiz, icon_lbl, has_icon_on, icon_off, icon_on](const std::string &state) {
         bool on = is_entity_on(state);
         if (!on) {
-          lv_slider_set_value(slider, 0, LV_ANIM_ON);
+          lv_slider_set_value(slider, 0, LV_ANIM_OFF);
+          if (fill) slider_update_fill(fill, btn_ptr, 0, horiz);
         }
         if (has_icon_on) {
           lv_label_set_text(icon_lbl, on ? icon_on : icon_off);
@@ -371,14 +395,15 @@ inline void subscribe_slider_state(lv_obj_t *btn_ptr, lv_obj_t *icon_lbl,
   esphome::api::global_api_server->subscribe_home_assistant_state(
     entity_id, std::string("brightness"),
     std::function<void(const std::string &)>(
-      [slider](const std::string &val) {
+      [slider, btn_ptr, fill, horiz](const std::string &val) {
         char *end;
         float bri = strtof(val.c_str(), &end);
         if (end != val.c_str()) {
           int pct = (int)((bri * 100.0f + 127.0f) / 255.0f);
           if (pct < 1) pct = 1;
           if (pct > 100) pct = 100;
-          lv_slider_set_value(slider, pct, LV_ANIM_ON);
+          lv_slider_set_value(slider, pct, LV_ANIM_OFF);
+          if (fill) slider_update_fill(fill, btn_ptr, pct, horiz);
         }
       })
   );

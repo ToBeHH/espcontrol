@@ -403,9 +403,19 @@ esphome:
                   }
                   bool sp_sl_horiz = sb.sensor == "h";
                   lv_obj_t *sl = setup_slider_widget(sb_btn, has_on ? on_val : 0xFF8C00, sp_sl_horiz);
+                  lv_obj_t *sp_fill = lv_obj_get_child(sb_btn, 0);
                   SliderCtx *lctx = new SliderCtx();
                   lctx->entity_id = sb.entity;
+                  lctx->fill = sp_fill;
+                  lctx->horizontal = sp_sl_horiz;
                   lv_obj_set_user_data(sl, (void *)lctx);
+                  lv_obj_add_event_cb(sl, [](lv_event_t *e) {
+                    lv_obj_t *s = lv_event_get_target(e);
+                    SliderCtx *c = (SliderCtx *)lv_obj_get_user_data(s);
+                    if (!c) return;
+                    int val = lv_slider_get_value(s);
+                    slider_update_fill(c->fill, lv_obj_get_parent(s), val, c->horizontal);
+                  }, LV_EVENT_VALUE_CHANGED, nullptr);
                   lv_obj_add_event_cb(sl, [](lv_event_t *e) {
                     lv_obj_t *s = lv_event_get_target(e);
                     SliderCtx *c = (SliderCtx *)lv_obj_get_user_data(s);

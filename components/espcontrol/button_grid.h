@@ -271,21 +271,15 @@ struct LightSliderCtx {
 
 inline lv_obj_t *setup_light_slider(lv_obj_t *btn, uint32_t on_color) {
   lv_coord_t btn_radius = lv_obj_get_style_radius(btn, LV_PART_MAIN);
-  lv_coord_t btn_pad = lv_obj_get_style_pad_top(btn, LV_PART_MAIN);
+
+  lv_obj_set_style_pad_all(btn, 0,
+    static_cast<lv_style_selector_t>(LV_PART_MAIN));
 
   lv_obj_t *slider = lv_slider_create(btn);
   lv_slider_set_range(slider, 1, 100);
   lv_slider_set_value(slider, 50, LV_ANIM_OFF);
   lv_obj_set_size(slider, lv_pct(100), lv_pct(100));
   lv_obj_align(slider, LV_ALIGN_CENTER, 0, 0);
-  lv_obj_set_style_margin_top(slider, -btn_pad,
-    static_cast<lv_style_selector_t>(LV_PART_MAIN));
-  lv_obj_set_style_margin_bottom(slider, -btn_pad,
-    static_cast<lv_style_selector_t>(LV_PART_MAIN));
-  lv_obj_set_style_margin_left(slider, -btn_pad,
-    static_cast<lv_style_selector_t>(LV_PART_MAIN));
-  lv_obj_set_style_margin_right(slider, -btn_pad,
-    static_cast<lv_style_selector_t>(LV_PART_MAIN));
 
   lv_obj_set_style_bg_opa(slider, LV_OPA_TRANSP,
     static_cast<lv_style_selector_t>(LV_PART_MAIN));
@@ -323,6 +317,9 @@ inline void setup_light_visual(BtnSlot &s, const std::string &cfg, uint32_t on_c
   setup_toggle_visual(s, cfg);
 
   lv_obj_t *slider = setup_light_slider(s.btn, on_color);
+  lv_coord_t pad = lv_obj_get_style_radius(s.btn, LV_PART_MAIN) + 4;
+  lv_obj_align(s.icon_lbl, LV_ALIGN_TOP_LEFT, pad, pad);
+  lv_obj_align(s.text_lbl, LV_ALIGN_BOTTOM_LEFT, pad, -pad);
   lv_obj_set_user_data(s.sensor_container, (void *)slider);
 
   LightSliderCtx *ctx = new LightSliderCtx();

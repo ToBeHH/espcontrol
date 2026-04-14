@@ -1,5 +1,5 @@
 # =============================================================================
-# SENSORS - Dynamic HA entity subscriptions (P4-4880 - 15 buttons, 3×5 grid)
+# SENSORS - Dynamic HA entity subscriptions (P4-4880 - 12 buttons, 3×4 grid)
 # =============================================================================
 # Uses shared C++ from button_grid.h and icons.h for parsing, icon lookup,
 # color handling, sensor cards, toggle visuals, and HA subscriptions.
@@ -28,7 +28,6 @@ esphome:
                 id(button_4_config), id(button_5_config), id(button_6_config),
                 id(button_7_config), id(button_8_config), id(button_9_config),
                 id(button_10_config), id(button_11_config), id(button_12_config),
-                id(button_13_config), id(button_14_config), id(button_15_config),
               };
               for (auto *c : cfgs) { if (!c->state.empty()) { all_empty = false; break; } }
               if (all_empty) {
@@ -51,11 +50,8 @@ esphome:
               { id(button_10_config), id(button_10), id(button_10_icon_label), id(button_10_text_label), id(button_10_sensor_container), id(button_10_sensor_label), id(button_10_unit_label) },
               { id(button_11_config), id(button_11), id(button_11_icon_label), id(button_11_text_label), id(button_11_sensor_container), id(button_11_sensor_label), id(button_11_unit_label) },
               { id(button_12_config), id(button_12), id(button_12_icon_label), id(button_12_text_label), id(button_12_sensor_container), id(button_12_sensor_label), id(button_12_unit_label) },
-              { id(button_13_config), id(button_13), id(button_13_icon_label), id(button_13_text_label), id(button_13_sensor_container), id(button_13_sensor_label), id(button_13_unit_label) },
-              { id(button_14_config), id(button_14), id(button_14_icon_label), id(button_14_text_label), id(button_14_sensor_container), id(button_14_sensor_label), id(button_14_unit_label) },
-              { id(button_15_config), id(button_15), id(button_15_icon_label), id(button_15_text_label), id(button_15_sensor_container), id(button_15_sensor_label), id(button_15_unit_label) },
             };
-            static constexpr int NUM_SLOTS = 15;
+            static constexpr int NUM_SLOTS = 12;
             static constexpr int COLS = 3;
 
             OrderResult parsed, order;
@@ -107,7 +103,7 @@ esphome:
 
         # Phase 2: HA subscriptions + subpage creation
         - lambda: |-
-            constexpr int NUM_SLOTS = 15;
+            constexpr int NUM_SLOTS = 12;
             constexpr int COLS = 3;
 
             static bool has_sensor[NUM_SLOTS] = {};
@@ -128,9 +124,6 @@ esphome:
               { id(button_10_config), id(button_10), id(button_10_icon_label), id(button_10_text_label), id(button_10_sensor_container), id(button_10_sensor_label), id(button_10_unit_label) },
               { id(button_11_config), id(button_11), id(button_11_icon_label), id(button_11_text_label), id(button_11_sensor_container), id(button_11_sensor_label), id(button_11_unit_label) },
               { id(button_12_config), id(button_12), id(button_12_icon_label), id(button_12_text_label), id(button_12_sensor_container), id(button_12_sensor_label), id(button_12_unit_label) },
-              { id(button_13_config), id(button_13), id(button_13_icon_label), id(button_13_text_label), id(button_13_sensor_container), id(button_13_sensor_label), id(button_13_unit_label) },
-              { id(button_14_config), id(button_14), id(button_14_icon_label), id(button_14_text_label), id(button_14_sensor_container), id(button_14_sensor_label), id(button_14_unit_label) },
-              { id(button_15_config), id(button_15), id(button_15_icon_label), id(button_15_text_label), id(button_15_sensor_container), id(button_15_sensor_label), id(button_15_unit_label) },
             };
 
             bool has_on, has_off, has_sensor_color;
@@ -216,7 +209,7 @@ esphome:
 
             // --- Subpage creation ---
             static lv_coord_t sp_col_dsc[] = {LV_GRID_FR(1), LV_GRID_FR(1), LV_GRID_FR(1), LV_GRID_TEMPLATE_LAST};
-            static lv_coord_t sp_row_dsc[] = {LV_GRID_FR(1), LV_GRID_FR(1), LV_GRID_FR(1), LV_GRID_FR(1), LV_GRID_FR(1), LV_GRID_TEMPLATE_LAST};
+            static lv_coord_t sp_row_dsc[] = {LV_GRID_FR(1), LV_GRID_FR(1), LV_GRID_FR(1), LV_GRID_FR(1), LV_GRID_TEMPLATE_LAST};
             const lv_font_t *sp_icon_fnt = lv_obj_get_style_text_font(slots[0].icon_lbl, LV_PART_MAIN);
 
             lv_obj_t *ref_btn = slots[0].btn;
@@ -230,14 +223,12 @@ esphome:
               id(subpage_4_config), id(subpage_5_config), id(subpage_6_config),
               id(subpage_7_config), id(subpage_8_config), id(subpage_9_config),
               id(subpage_10_config), id(subpage_11_config), id(subpage_12_config),
-              id(subpage_13_config), id(subpage_14_config), id(subpage_15_config),
             };
             esphome::text::Text *sp_ext_configs[] = {
               id(subpage_1_config_ext), id(subpage_2_config_ext), id(subpage_3_config_ext),
               id(subpage_4_config_ext), id(subpage_5_config_ext), id(subpage_6_config_ext),
               id(subpage_7_config_ext), id(subpage_8_config_ext), id(subpage_9_config_ext),
               id(subpage_10_config_ext), id(subpage_11_config_ext), id(subpage_12_config_ext),
-              id(subpage_13_config_ext), id(subpage_14_config_ext), id(subpage_15_config_ext),
             };
 
             static int sp_on_count[NUM_SLOTS] = {};

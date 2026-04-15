@@ -42,7 +42,9 @@ script:
                 value: 'true'
             - if:
                 condition:
-                  lambda: 'return id(clock_screensaver_enabled).state;'
+                  lambda: |-
+                    return id(clock_screensaver_enabled).state
+                        && id(presence_sensor_entity).state.empty();
                 then:
                   - script.execute: show_clock_view
                 else:

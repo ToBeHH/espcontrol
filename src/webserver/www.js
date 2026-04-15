@@ -1330,6 +1330,7 @@
     timeoutSelect.className = "sp-select";
     timeoutSelect.id = "sp-set-ss-timeout";
     var timeoutOptions = [
+      { label: "1 minute", value: 60 },
       { label: "5 minutes", value: 300 },
       { label: "10 minutes", value: 600 },
       { label: "15 minutes", value: 900 },

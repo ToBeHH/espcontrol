@@ -119,8 +119,8 @@ number:
     name: "Screensaver Timeout"
     internal: true
     id: screensaver_timeout
-    min_value: 30
-    max_value: 1800
+    min_value: 60
+    max_value: 3600
     step: 30
     initial_value: 1800
     restore_value: true

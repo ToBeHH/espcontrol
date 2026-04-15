@@ -16,6 +16,7 @@ jobs:
     name: Build ${{ matrix.slug }}
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         include:
           - device: guition-esp32-p4-jc1060p470
@@ -36,7 +37,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: builds/.esphome
-          key: esphome-${{ matrix.slug }}-${{ hashFiles('builds/**', 'common/**', 'devices/**') }}
+          key: esphome-${{ matrix.slug }}-${{ hashFiles('builds/*.yaml', 'common/**', 'devices/**') }}
           restore-keys: |
             esphome-${{ matrix.slug }}-
 

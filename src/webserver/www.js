@@ -1228,7 +1228,14 @@
     els.setNightBrightness = nightSlider.range;
     els.setNightBrightnessVal = nightSlider.val;
 
-    config.appendChild(makeCollapsibleCard("Brightness", blBody, true));
+    var sunInfo = document.createElement("div");
+    sunInfo.className = "sp-sun-info";
+    sunInfo.id = "sp-sun-info";
+    blBody.appendChild(sunInfo);
+    els.sunInfo = sunInfo;
+    updateSunInfo();
+
+    config.appendChild(makeCollapsibleCard("Backlight", blBody, true));
 
     var clockBody = document.createElement("div");
 
@@ -1275,13 +1282,6 @@
     cfField.appendChild(cfSelect);
     clockBody.appendChild(cfField);
     els.setClockFormat = cfSelect;
-
-    var sunInfo = document.createElement("div");
-    sunInfo.className = "sp-sun-info";
-    sunInfo.id = "sp-sun-info";
-    clockBody.appendChild(sunInfo);
-    els.sunInfo = sunInfo;
-    updateSunInfo();
 
     config.appendChild(makeCollapsibleCard("Clock", clockBody, true));
 

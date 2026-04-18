@@ -170,7 +170,7 @@ display:
 # ---------------------------------------------------------------------------
 lvgl:
   displays: my_display
-  rotation: 0
+  rotation: 180
   byte_order: little_endian
 
 script:
@@ -192,7 +192,7 @@ select:
     icon: "mdi:screen-rotation"
     optimistic: true
     restore_value: true
-    initial_option: "0"
+    initial_option: "180"
     options:
       - "0"
       - "180"

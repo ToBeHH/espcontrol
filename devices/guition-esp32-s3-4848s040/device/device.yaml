@@ -149,7 +149,7 @@ display:
 lvgl:
   buffer_size: 25%
   displays: my_display
-  rotation: 0
+  rotation: 180
   touchscreens: my_touchscreen
 
 script:
@@ -183,7 +183,7 @@ select:
     icon: "mdi:screen-rotation"
     optimistic: true
     restore_value: true
-    initial_option: "0"
+    initial_option: "180"
     options:
       - "0"
       - "90"

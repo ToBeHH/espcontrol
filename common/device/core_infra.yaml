@@ -43,6 +43,7 @@ web_server:
 button:
   - platform: template
     name: "Apply Configuration"
+    internal: true
     icon: mdi:restart
     entity_category: config
     on_press:

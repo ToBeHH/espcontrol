@@ -724,7 +724,7 @@
     ".fade-in{animation:fadeIn .3s ease}" +
     "@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}" +
 
-    ".sp-wrap{display:flex;justify-content:center;padding:20px var(--gap) 4px}" +
+    ".sp-wrap{display:flex;justify-content:center;padding:20px var(--gap) 4px;user-select:none}" +
     ".sp-screen{width:var(--screen-w);aspect-ratio:var(--screen-aspect);background:#000;" +
     "border-radius:var(--radius);position:relative;overflow:hidden;" +
     "box-shadow:0 2px 20px rgba(0,0,0,.35);border:2px solid var(--surface);" +
@@ -779,9 +779,9 @@
     (CFG.dragAnimation ? ".sp-btn.sp-dragging{opacity:.4;transform:scale(.95)}" +
     ".sp-empty-cell.sp-drop-placeholder{border-color:rgba(92,156,245,.5)}" : "") +
 
-    ".sp-hint{text-align:center;font-size:.7rem;color:var(--text3);padding:8px 0 12px}" +
+    ".sp-hint{text-align:center;font-size:.7rem;color:var(--text3);padding:8px 0 12px;user-select:none}" +
     ".sp-selection-bar{display:none;align-items:center;justify-content:center;gap:8px;" +
-    "padding:0 var(--gap) 12px;color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}" +
+    "padding:0 var(--gap) 12px;color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;user-select:none}" +
     ".sp-selection-bar.sp-visible{display:flex}" +
     ".sp-selection-label{font-size:.8rem;color:var(--text2);margin-right:4px}" +
     ".sp-selection-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;" +
@@ -3544,9 +3544,19 @@
     }
   }
 
+  function clearTextSelection() {
+    var selection = window.getSelection && window.getSelection();
+    if (selection && selection.removeAllRanges) selection.removeAllRanges();
+  }
+
   function setupPreviewEvents() {
     var container = els.previewMain;
     var pendingCellIdx = -1;
+
+    container.addEventListener("mousedown", function (e) {
+      if (!e.target.closest("[data-pos]")) return;
+      if (e.shiftKey || e.ctrlKey || e.metaKey) e.preventDefault();
+    });
 
     // Click delegation
     container.addEventListener("click", function (e) {
@@ -3690,6 +3700,7 @@
   function handleBtnClick(e, slot, pos) {
     if (didDrag) { didDrag = false; return; }
     var c = ctx();
+    if (e.shiftKey || e.ctrlKey || e.metaKey) e.preventDefault();
 
     if (e.shiftKey && c.getLastClicked() > 0) {
       var anchorPos = c.grid.indexOf(c.getLastClicked());
@@ -3703,6 +3714,7 @@
         c.setSelected(newSel);
         renderPreview();
         hideSettingsOverlay();
+        clearTextSelection();
         return;
       }
     }
@@ -3717,6 +3729,7 @@
       }
       renderPreview();
       hideSettingsOverlay();
+      clearTextSelection();
       return;
     }
 

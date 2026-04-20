@@ -35,6 +35,7 @@ text_sensor:
     name: "Screen: Sunrise"
     id: sunrise_time_sensor
     entity_category: diagnostic
+    internal: true
     icon: "mdi:weather-sunset-up"
     web_server:
       sorting_group_id: sg_brightness
@@ -43,6 +44,7 @@ text_sensor:
     name: "Screen: Sunset"
     id: sunset_time_sensor
     entity_category: diagnostic
+    internal: true
     icon: "mdi:weather-sunset-down"
     web_server:
       sorting_group_id: sg_brightness

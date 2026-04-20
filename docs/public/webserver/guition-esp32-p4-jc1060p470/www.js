@@ -218,7 +218,6 @@
         b.icon || "Auto", function (opt) {
           b.icon = opt;
           helpers.saveField("icon", opt);
-          renderPreview();
         }
       ));
     },
@@ -309,7 +308,6 @@
             var btns = precSeg.querySelectorAll("button");
             for (var j = 0; j < btns.length; j++) btns[j].classList.remove("active");
             btn.classList.add("active");
-            renderPreview();
           });
           precSeg.appendChild(btn);
         })(precOpts[i][0], precOpts[i][1]);
@@ -324,7 +322,6 @@
         b.icon || "Auto", function (opt) {
           b.icon = opt;
           helpers.saveField("icon", opt);
-          renderPreview();
         }
       );
       textSection.appendChild(textIconPicker);
@@ -360,7 +357,6 @@
           var pbs = precSeg.querySelectorAll("button");
           for (var j = 0; j < pbs.length; j++) pbs[j].classList.toggle("active", j === 0);
         }
-        renderPreview();
       }
 
       numericBtn.addEventListener("click", function () { setMode("numeric", true); });
@@ -422,7 +418,6 @@
           b.icon || "Auto", function (opt) {
             b.icon = opt;
             helpers.saveField("icon", opt);
-            renderPreview();
           }
         ));
 
@@ -449,13 +444,11 @@
           btnV.classList.add("active"); btnH.classList.remove("active");
           b.sensor = "";
           helpers.saveField("sensor", "");
-          renderPreview();
         });
         btnH.addEventListener("click", function () {
           btnH.classList.add("active"); btnV.classList.remove("active");
           b.sensor = "h";
           helpers.saveField("sensor", "h");
-          renderPreview();
         });
 
         var hasIconOn = b.icon_on && b.icon_on !== "Auto";
@@ -483,7 +476,6 @@
         initIconPicker(iconOnPicker, iconOnVal, function (opt) {
           b.icon_on = opt;
           helpers.saveField("icon_on", opt);
-          renderPreview();
         });
 
         panel.appendChild(iconOnCond);
@@ -499,7 +491,6 @@
             if (ionPreview) ionPreview.className = "sp-icon-picker-preview mdi mdi-cog";
             var ionInput = iconOnPicker.querySelector(".sp-icon-picker-input");
             if (ionInput) ionInput.value = "Auto";
-            renderPreview();
           }
         });
       },
@@ -561,7 +552,6 @@
         b.icon || "Auto", function (opt) {
           b.icon = opt;
           helpers.saveField("icon", opt);
-          renderPreview();
         }
       ));
       var displayStateEnabled = b.sensor === "indicator";
@@ -595,7 +585,6 @@
       initIconPicker(iconOnPicker, iconOnVal, function (opt) {
         b.icon_on = opt;
         helpers.saveField("icon_on", opt);
-        renderPreview();
       });
 
       panel.appendChild(iconOnCond);
@@ -611,7 +600,6 @@
           if (ionPreview) ionPreview.className = "sp-icon-picker-preview mdi mdi-cog";
           var ionInput = iconOnPicker.querySelector(".sp-icon-picker-input");
           if (ionInput) ionInput.value = "Auto";
-          renderPreview();
         }
       });
 
@@ -633,7 +621,6 @@
             if (ionPreview) ionPreview.className = "sp-icon-picker-preview mdi mdi-cog";
             var ionInput = iconOnPicker.querySelector(".sp-icon-picker-input");
             if (ionInput) ionInput.value = "Auto";
-            renderPreview();
           }
         }
       });
@@ -1129,6 +1116,7 @@
     subpageSelectedSlots: [],
     subpageLastClicked: -1,
     clipboard: null,
+    settingsDraft: null,
   };
 
   for (var i = 0; i < NUM_SLOTS; i++) {
@@ -3003,7 +2991,6 @@
         var td = BUTTON_TYPES[newType];
         if (td && td.onSelect) td.onSelect(b);
         saveField("type", newType);
-        renderPreview();
         renderButtonSettings();
       });
       tf.appendChild(typeSelect);
@@ -3046,7 +3033,6 @@
       panel.appendChild(makeIconPicker(idPrefix + "icon-picker", idPrefix + "icon", b.icon || "Auto", function (opt) {
         b.icon = opt;
         saveField("icon", opt);
-        renderPreview();
       }));
 
       // When-on section
@@ -3095,7 +3081,6 @@
       initIconPicker(iconOnPicker, iconOnVal, function (opt) {
         b.icon_on = opt;
         saveField("icon_on", opt);
-        renderPreview();
       });
 
       // Sensor section
@@ -3180,7 +3165,6 @@
           var ionInput = iconOnPicker.querySelector(".sp-icon-picker-input");
           if (ionInput) ionInput.value = "Auto";
         }
-        renderPreview();
       }
 
       btnIcon.addEventListener("click", function () { setWhenOnMode("icon"); });
@@ -3206,7 +3190,6 @@
           saveField("unit", "");
           saveField("precision", "");
           saveField("icon_on", "Auto");
-          renderPreview();
         }
       });
     }

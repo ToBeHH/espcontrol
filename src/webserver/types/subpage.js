@@ -12,7 +12,6 @@ registerButtonType("subpage", {
       b.icon || "Auto", function (opt) {
         b.icon = opt;
         helpers.saveField("icon", opt);
-        renderPreview();
       }
     ));
     var displayStateEnabled = b.sensor === "indicator";
@@ -46,7 +45,6 @@ registerButtonType("subpage", {
     initIconPicker(iconOnPicker, iconOnVal, function (opt) {
       b.icon_on = opt;
       helpers.saveField("icon_on", opt);
-      renderPreview();
     });
 
     panel.appendChild(iconOnCond);
@@ -62,7 +60,6 @@ registerButtonType("subpage", {
         if (ionPreview) ionPreview.className = "sp-icon-picker-preview mdi mdi-cog";
         var ionInput = iconOnPicker.querySelector(".sp-icon-picker-input");
         if (ionInput) ionInput.value = "Auto";
-        renderPreview();
       }
     });
 
@@ -84,7 +81,6 @@ registerButtonType("subpage", {
           if (ionPreview) ionPreview.className = "sp-icon-picker-preview mdi mdi-cog";
           var ionInput = iconOnPicker.querySelector(".sp-icon-picker-input");
           if (ionInput) ionInput.value = "Auto";
-          renderPreview();
         }
       }
     });

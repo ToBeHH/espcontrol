@@ -569,6 +569,7 @@
     subpageSelectedSlots: [],
     subpageLastClicked: -1,
     clipboard: null,
+    settingsDraft: null,
   };
 
   for (var i = 0; i < NUM_SLOTS; i++) {
@@ -2443,7 +2444,6 @@
         var td = BUTTON_TYPES[newType];
         if (td && td.onSelect) td.onSelect(b);
         saveField("type", newType);
-        renderPreview();
         renderButtonSettings();
       });
       tf.appendChild(typeSelect);
@@ -2486,7 +2486,6 @@
       panel.appendChild(makeIconPicker(idPrefix + "icon-picker", idPrefix + "icon", b.icon || "Auto", function (opt) {
         b.icon = opt;
         saveField("icon", opt);
-        renderPreview();
       }));
 
       // When-on section
@@ -2535,7 +2534,6 @@
       initIconPicker(iconOnPicker, iconOnVal, function (opt) {
         b.icon_on = opt;
         saveField("icon_on", opt);
-        renderPreview();
       });
 
       // Sensor section
@@ -2620,7 +2618,6 @@
           var ionInput = iconOnPicker.querySelector(".sp-icon-picker-input");
           if (ionInput) ionInput.value = "Auto";
         }
-        renderPreview();
       }
 
       btnIcon.addEventListener("click", function () { setWhenOnMode("icon"); });
@@ -2646,7 +2643,6 @@
           saveField("unit", "");
           saveField("precision", "");
           saveField("icon_on", "Auto");
-          renderPreview();
         }
       });
     }

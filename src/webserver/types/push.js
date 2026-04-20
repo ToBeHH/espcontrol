@@ -13,7 +13,6 @@ registerButtonType("push", {
       b.icon || "Auto", function (opt) {
         b.icon = opt;
         helpers.saveField("icon", opt);
-        renderPreview();
       }
     ));
   },

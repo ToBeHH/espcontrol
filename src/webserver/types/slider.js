@@ -25,7 +25,6 @@ function sliderTypeFactory(opts) {
         b.icon || "Auto", function (opt) {
           b.icon = opt;
           helpers.saveField("icon", opt);
-          renderPreview();
         }
       ));
 
@@ -52,13 +51,11 @@ function sliderTypeFactory(opts) {
         btnV.classList.add("active"); btnH.classList.remove("active");
         b.sensor = "";
         helpers.saveField("sensor", "");
-        renderPreview();
       });
       btnH.addEventListener("click", function () {
         btnH.classList.add("active"); btnV.classList.remove("active");
         b.sensor = "h";
         helpers.saveField("sensor", "h");
-        renderPreview();
       });
 
       var hasIconOn = b.icon_on && b.icon_on !== "Auto";
@@ -86,7 +83,6 @@ function sliderTypeFactory(opts) {
       initIconPicker(iconOnPicker, iconOnVal, function (opt) {
         b.icon_on = opt;
         helpers.saveField("icon_on", opt);
-        renderPreview();
       });
 
       panel.appendChild(iconOnCond);
@@ -102,7 +98,6 @@ function sliderTypeFactory(opts) {
           if (ionPreview) ionPreview.className = "sp-icon-picker-preview mdi mdi-cog";
           var ionInput = iconOnPicker.querySelector(".sp-icon-picker-input");
           if (ionInput) ionInput.value = "Auto";
-          renderPreview();
         }
       });
     },

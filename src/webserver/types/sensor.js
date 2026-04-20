@@ -73,7 +73,6 @@ registerButtonType("sensor", {
           var btns = precSeg.querySelectorAll("button");
           for (var j = 0; j < btns.length; j++) btns[j].classList.remove("active");
           btn.classList.add("active");
-          renderPreview();
         });
         precSeg.appendChild(btn);
       })(precOpts[i][0], precOpts[i][1]);
@@ -88,7 +87,6 @@ registerButtonType("sensor", {
       b.icon || "Auto", function (opt) {
         b.icon = opt;
         helpers.saveField("icon", opt);
-        renderPreview();
       }
     );
     textSection.appendChild(textIconPicker);
@@ -124,7 +122,6 @@ registerButtonType("sensor", {
         var pbs = precSeg.querySelectorAll("button");
         for (var j = 0; j < pbs.length; j++) pbs[j].classList.toggle("active", j === 0);
       }
-      renderPreview();
     }
 
     numericBtn.addEventListener("click", function () { setMode("numeric", true); });

@@ -18,6 +18,8 @@ The screensaver does not run automatically. This is the default setting.
 
 The screensaver turns on after the panel hasn't been touched for a set amount of time. Choose from:
 
+- 10 seconds
+- 30 seconds
 - 1 minute
 - **5 minutes** (the default)
 - 10, 15, 20, 30, or 45 minutes

@@ -2384,6 +2384,7 @@
     timerPanel.appendChild(timerClockControls.clockField);
     timerPanel.appendChild(timerClockControls.brightnessField);
     els.setClockSelect = timerClockControls.clockSelect;
+    els.setClockField = timerClockControls.clockField;
     els.setClockBrightness = timerClockControls.clockBrightness;
     els.setClockBrightnessVal = timerClockControls.clockBrightnessVal;
     els.setClockBrightnessField = timerClockControls.brightnessField;
@@ -2405,6 +2406,7 @@
     ssBody.appendChild(sensorPanel);
     els.setPresence = presInp;
     els.setSensorClockSelect = sensorClockControls.clockSelect;
+    els.setSensorClockField = sensorClockControls.clockField;
     els.setSensorClockBrightness = sensorClockControls.clockBrightness;
     els.setSensorClockBrightnessVal = sensorClockControls.clockBrightnessVal;
     els.setSensorClockBrightnessField = sensorClockControls.brightnessField;
@@ -2723,8 +2725,8 @@
 
     if (els.setClockSelect) els.setClockSelect.value = mode;
     if (els.setSensorClockSelect) els.setSensorClockSelect.value = mode;
-    if (els.setClockBrightnessField) els.setClockBrightnessField.style.display = display;
-    if (els.setSensorClockBrightnessField) els.setSensorClockBrightnessField.style.display = display;
+    syncOptionalClockBrightness(els.setClockBrightnessField, els.setClockField, display);
+    syncOptionalClockBrightness(els.setSensorClockBrightnessField, els.setSensorClockField, display);
     if (els.setClockBrightness) {
       els.setClockBrightness.value = state.clockBrightness;
       els.setClockBrightnessVal.textContent = brightness;
@@ -2733,6 +2735,11 @@
       els.setSensorClockBrightness.value = state.clockBrightness;
       els.setSensorClockBrightnessVal.textContent = brightness;
     }
+  }
+
+  function syncOptionalClockBrightness(field, previousField, display) {
+    if (field) field.style.display = display;
+    if (previousField) previousField.style.marginBottom = display === "none" ? "0" : "";
   }
 
   function createScreensaverThenControls(selectId) {

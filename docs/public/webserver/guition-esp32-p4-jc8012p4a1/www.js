@@ -2390,9 +2390,12 @@
     els.setSSTimeout = timeoutSelect;
 
     var sensorPanel = document.createElement("div");
-    sensorPanel.appendChild(fieldLabel("Presence Entity"));
+    var presenceField = document.createElement("div");
+    presenceField.className = "sp-field";
+    presenceField.appendChild(fieldLabel("Presence Entity", "sp-set-presence"));
     var presInp = textInput("sp-set-presence", "", "Presence sensor entity");
-    sensorPanel.appendChild(presInp);
+    presenceField.appendChild(presInp);
+    sensorPanel.appendChild(presenceField);
     bindTextPost(presInp, "Presence Sensor Entity", {});
     var sensorClockControls = createScreensaverThenControls("sp-set-sensor-clock-mode");
     sensorPanel.appendChild(sensorClockControls.clockField);

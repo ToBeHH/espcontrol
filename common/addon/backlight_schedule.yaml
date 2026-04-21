@@ -225,22 +225,17 @@ script:
       - script.stop: home_screen_idle_check
       - script.stop: screen_schedule_wake_timeout_check
       - globals.set:
-          id: display_asleep
-          value: 'true'
-      - globals.set:
-          id: screensaver_display_off_active
-          value: 'true'
-      - globals.set:
-          id: screen_schedule_asleep
-          value: 'true'
-      - globals.set:
           id: backlight_manual_off
           value: 'false'
       - globals.set:
           id: manual_wake_ms
           value: '0'
+      - script.execute: backlight_sleep_display_off
+      - script.wait: backlight_sleep_display_off
+      - globals.set:
+          id: screen_schedule_asleep
+          value: 'true'
       - lambda: 'global_preferences->sync();'
-      - script.execute: backlight_schedule_display_off
 
   # ---------------------------------------------------------------------------
   # Wake automatically at the start of the schedule window

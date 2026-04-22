@@ -423,8 +423,12 @@ inline bool garage_state_uses_open_icon(const std::string &state) {
   return state == "open" || state == "opening";
 }
 
-// Reusable label helper: show a changed status briefly, then return to steady text.
-static const uint32_t STATUS_LABEL_STABLE_MS = 10000;
+inline bool garage_state_releases_label(const std::string &state) {
+  return state == "open" || state == "closed";
+}
+
+// Reusable label helper: show changed status, then optionally return to steady text.
+static const uint32_t STATUS_LABEL_STABLE_MS = 5000;
 
 struct TransientStatusLabel {
   lv_obj_t *label = nullptr;
@@ -466,11 +470,17 @@ inline void transient_status_label_set_steady(TransientStatusLabel *ctx,
 }
 
 inline void transient_status_label_show_if_changed(TransientStatusLabel *ctx,
-                                                   const std::string &status_text) {
+                                                   const std::string &status_text,
+                                                   bool release_to_steady = true) {
   if (!ctx) return;
   if (!ctx->has_status) {
     ctx->last_status_text = status_text;
     ctx->has_status = true;
+    if (!release_to_steady) {
+      ctx->showing_status = true;
+      if (ctx->label) lv_label_set_text(ctx->label, status_text.c_str());
+      if (ctx->revert_timer) lv_timer_pause(ctx->revert_timer);
+    }
     return;
   }
   if (ctx->last_status_text == status_text) return;
@@ -478,8 +488,12 @@ inline void transient_status_label_show_if_changed(TransientStatusLabel *ctx,
   ctx->showing_status = true;
   if (ctx->label) lv_label_set_text(ctx->label, status_text.c_str());
   if (ctx->revert_timer) {
-    lv_timer_reset(ctx->revert_timer);
-    lv_timer_resume(ctx->revert_timer);
+    if (release_to_steady) {
+      lv_timer_reset(ctx->revert_timer);
+      lv_timer_resume(ctx->revert_timer);
+    } else {
+      lv_timer_pause(ctx->revert_timer);
+    }
   }
 }
 
@@ -909,7 +923,8 @@ inline void subscribe_garage_state(lv_obj_t *btn_ptr, lv_obj_t *icon_lbl,
         if (active) lv_obj_add_state(btn_ptr, LV_STATE_CHECKED);
         else lv_obj_clear_state(btn_ptr, LV_STATE_CHECKED);
         lv_label_set_text(icon_lbl, garage_state_uses_open_icon(state) ? open_icon : closed_icon);
-        transient_status_label_show_if_changed(status_label, garage_state_label(state));
+        transient_status_label_show_if_changed(
+          status_label, garage_state_label(state), garage_state_releases_label(state));
       })
   );
 }

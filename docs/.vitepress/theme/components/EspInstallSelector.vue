@@ -26,8 +26,8 @@
           </span>
         </span>
         <span class="device-copy">
-          <span class="device-name">{{ device.name }}</span>
-          <span class="device-meta">{{ device.size }} - {{ device.resolution }}</span>
+          <span class="device-name">{{ device.size }}</span>
+          <span class="device-meta">{{ device.name }} - {{ device.resolution }}</span>
           <span class="device-tags">
             <span>{{ device.orientation }}</span>
             <span>{{ device.slots }} buttons</span>
@@ -37,13 +37,7 @@
       </button>
     </div>
 
-    <div class="installer-panel">
-      <div class="selected-device">
-        <span class="selected-label">Target device</span>
-        <strong>{{ selected.name }}</strong>
-        <span>{{ selected.size }} {{ selected.orientation.toLowerCase() }} panel</span>
-      </div>
-
+    <div class="installer-actions">
       <div v-if="!checked" class="installer-status">
         Preparing installer...
       </div>
@@ -197,9 +191,7 @@ onMounted(async () => {
 
 .device-card.selected {
   border-color: var(--vp-c-brand-1);
-  background:
-    linear-gradient(135deg, var(--vp-c-brand-soft), transparent 56%),
-    var(--vp-c-bg);
+  background: var(--vp-c-brand-soft);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
 }
 
@@ -292,38 +284,8 @@ onMounted(async () => {
   transform: rotate(45deg) translate(-1px, -1px);
 }
 
-.installer-panel {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px;
-  border: 1px solid var(--vp-c-divider);
-  border-radius: 8px;
-  background: var(--vp-c-bg-soft);
-}
-
-.selected-device {
-  display: grid;
-  gap: 2px;
-  min-width: 0;
-}
-
-.selected-label {
-  color: var(--vp-c-text-2);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0;
-  text-transform: uppercase;
-}
-
-.selected-device strong {
-  font-size: 18px;
-}
-
-.selected-device span:last-child {
-  color: var(--vp-c-text-2);
-  font-size: 13px;
+.installer-actions {
+  margin-top: 16px;
 }
 
 .brand-button {
@@ -371,11 +333,6 @@ onMounted(async () => {
 
   .device-card {
     grid-template-columns: 64px 1fr 22px;
-  }
-
-  .installer-panel {
-    align-items: stretch;
-    flex-direction: column;
   }
 
   .brand-button {

@@ -18,8 +18,8 @@ A cover card lets you control a Home Assistant cover entity — blinds, shutters
    - **Toggle** opens or closes the cover with a tap.
 3. Set a **Label** (optional) — shown at the bottom of the card. If left blank, the entity's friendly name from Home Assistant is used.
 4. Enter an **Entity ID** — the Home Assistant cover entity you want to control (for example, `cover.office_blind`).
-5. Choose a **Closed Icon** (defaults to **Blinds**).
-6. Choose an **Open Icon** (defaults to **Blinds Open**).
+5. Choose an **Open Icon** (defaults to **Blinds Open**).
+6. Choose a **Closed Icon** (defaults to **Blinds**).
 
 ## How It Works on the Panel
 

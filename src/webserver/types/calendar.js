@@ -12,6 +12,7 @@ registerButtonType("calendar", {
     b.unit = "";
     b.precision = "";
   },
+  renderSettings: function () {},
   renderPreview: function (b, helpers) {
     var now = new Date();
     var day = String(now.getDate());

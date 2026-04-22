@@ -589,6 +589,7 @@
     subpageLastClicked: -1,
     clipboard: null,
     settingsDraft: null,
+    entityPostPaths: {},
   };
 
   for (var i = 0; i < NUM_SLOTS; i++) {
@@ -1147,6 +1148,77 @@
 
   var _postQueue = Promise.resolve();
 
+  function uniquePush(list, value) {
+    if (value && list.indexOf(value) === -1) list.push(value);
+  }
+
+  function esphomeObjectId(value) {
+    return String(value || "").replace(/./g, function (ch) {
+      if (ch === " ") return "_";
+      var lower = ch.toLowerCase();
+      if ((lower >= "a" && lower <= "z") || (ch >= "0" && ch <= "9") || ch === "-" || ch === "_") return lower;
+      return "_";
+    });
+  }
+
+  function parseEntityId(value) {
+    var id = String(value || "");
+    if (!id) return null;
+    if (id.indexOf("/") !== -1) {
+      var parts = id.split("/");
+      if (parts.length < 2 || !parts[0] || !parts[parts.length - 1]) return null;
+      return {
+        raw: id,
+        domain: parts[0],
+        name: parts[parts.length - 1],
+        objectId: esphomeObjectId(parts[parts.length - 1]),
+        path: "/" + parts.map(encodeURIComponent).join("/"),
+      };
+    }
+    var dash = id.indexOf("-");
+    if (dash <= 0) return null;
+    return {
+      raw: id,
+      domain: id.substring(0, dash),
+      objectId: id.substring(dash + 1),
+      path: "/" + encodeURIComponent(id.substring(0, dash)) + "/" + encodeURIComponent(id.substring(dash + 1)),
+    };
+  }
+
+  function entityStateKeys(data) {
+    var keys = [];
+    [data && data.id, data && data.name_id].forEach(function (id) {
+      var parsed = parseEntityId(id);
+      uniquePush(keys, id);
+      if (parsed && parsed.domain && parsed.objectId) uniquePush(keys, parsed.domain + "-" + parsed.objectId);
+      if (parsed && parsed.domain && parsed.name) uniquePush(keys, parsed.domain + ":" + parsed.name);
+    });
+    return keys;
+  }
+
+  function rememberEntityPostPath(data) {
+    var preferred = parseEntityId(data && data.name_id) || parseEntityId(data && data.id);
+    if (!preferred || !preferred.path) return;
+    entityStateKeys(data).forEach(function (key) {
+      state.entityPostPaths[key] = preferred.path;
+    });
+    if (preferred.domain && preferred.name) state.entityPostPaths[preferred.domain + ":" + preferred.name] = preferred.path;
+    if (preferred.domain && preferred.objectId) state.entityPostPaths[preferred.domain + ":" + preferred.objectId] = preferred.path;
+  }
+
+  function rememberedPostUrls(domain, name, objectIds, action) {
+    var urls = [];
+    var keys = [domain + ":" + name, domain + "-" + esphomeObjectId(name)];
+    objectIds.forEach(function (objectId) {
+      keys.push(domain + ":" + objectId);
+      keys.push(domain + "-" + objectId);
+    });
+    keys.forEach(function (key) {
+      if (state.entityPostPaths[key]) uniquePush(urls, state.entityPostPaths[key] + "/" + action);
+    });
+    return urls;
+  }
+
   function post(url, fallbackUrl, errorMessage) {
     var urls = Array.isArray(url) ? url.slice() : [url];
     if (fallbackUrl) urls.push(fallbackUrl);
@@ -1226,15 +1298,14 @@
   }
 
   function postWithObjectId(domain, name, objectId, action, errorMessage) {
-    post("/" + domain + "/" + encodeURIComponent(name) + "/" + action,
-      "/" + domain + "/" + encodeURIComponent(objectId) + "/" + action,
-      errorMessage);
+    postWithObjectIds(domain, name, [objectId], action, errorMessage);
   }
 
   function postWithObjectIds(domain, name, objectIds, action, errorMessage) {
-    var urls = ["/" + domain + "/" + encodeURIComponent(name) + "/" + action];
+    var urls = rememberedPostUrls(domain, name, objectIds, action);
+    uniquePush(urls, "/" + domain + "/" + encodeURIComponent(name) + "/" + action);
     objectIds.forEach(function (objectId) {
-      urls.push("/" + domain + "/" + encodeURIComponent(objectId) + "/" + action);
+      uniquePush(urls, "/" + domain + "/" + encodeURIComponent(objectId) + "/" + action);
     });
     post(urls, null, errorMessage);
   }
@@ -5443,10 +5514,14 @@
     source.addEventListener("state", function (e) {
       var d;
       try { d = JSON.parse(e.data); } catch (_) { return; }
-      var id = d.id;
+      rememberEntityPostPath(d);
+      var keys = entityStateKeys(d);
+      var id = keys[0] || d.id;
       var val = d.state != null ? String(d.state) : "";
 
-      if (sseHandlers[id]) { sseHandlers[id](val, d); return; }
+      for (var ki = 0; ki < keys.length; ki++) {
+        if (sseHandlers[keys[ki]]) { sseHandlers[keys[ki]](val, d); return; }
+      }
       if (isFirmwareVersionEvent(id, d)) {
         setFirmwareVersion(val);
         return;
@@ -5457,8 +5532,10 @@
       }
 
       for (var i = 0; i < ssePatterns.length; i++) {
-        var m = id.match(ssePatterns[i].re);
-        if (m) { ssePatterns[i].fn(m, val, d); return; }
+        for (var pk = 0; pk < keys.length; pk++) {
+          var m = keys[pk].match(ssePatterns[i].re);
+          if (m) { ssePatterns[i].fn(m, val, d); return; }
+        }
       }
 
       console.log("[SSE] unhandled:", id, val);

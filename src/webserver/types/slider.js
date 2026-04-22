@@ -20,13 +20,40 @@ function sliderTypeFactory(opts) {
       panel.appendChild(ef);
       helpers.bindField(entityInp, "entity", true);
 
-      panel.appendChild(helpers.makeIconPicker(
-        helpers.idPrefix + "icon-picker", helpers.idPrefix + "icon",
-        b.icon || "Auto", function (opt) {
-          b.icon = opt;
-          helpers.saveField("icon", opt);
-        }
-      ));
+      function iconField(label, inputSuffix, field, currentVal, defaultVal) {
+        var section = document.createElement("div");
+        section.className = "sp-field";
+        section.appendChild(helpers.fieldLabel(label, helpers.idPrefix + inputSuffix));
+        var picker = document.createElement("div");
+        picker.className = "sp-icon-picker";
+        picker.id = helpers.idPrefix + inputSuffix + "-picker";
+        picker.innerHTML =
+          '<span class="sp-icon-picker-preview mdi mdi-' + iconSlug(currentVal) + '"></span>' +
+          '<input class="sp-icon-picker-input" id="' + helpers.idPrefix + inputSuffix + '" type="text" ' +
+          'placeholder="Search icons\u2026" value="' + escAttr(currentVal) + '" autocomplete="off">' +
+          '<div class="sp-icon-dropdown"></div>';
+        section.appendChild(picker);
+        initIconPicker(picker, currentVal, function (opt) {
+          b[field] = opt || defaultVal;
+          helpers.saveField(field, b[field]);
+        });
+        return section;
+      }
+
+      if (opts.alwaysShowIconPair) {
+        var closedIconVal = b.icon && b.icon !== "Auto" ? b.icon : opts.defaultIcon;
+        var openIconVal = b.icon_on && b.icon_on !== "Auto" ? b.icon_on : opts.defaultIconOn;
+        panel.appendChild(iconField("Closed Icon", "icon", "icon", closedIconVal, opts.defaultIcon));
+        panel.appendChild(iconField("Open Icon", "icon-on", "icon_on", openIconVal, opts.defaultIconOn));
+      } else {
+        panel.appendChild(helpers.makeIconPicker(
+          helpers.idPrefix + "icon-picker", helpers.idPrefix + "icon",
+          b.icon || "Auto", function (opt) {
+            b.icon = opt;
+            helpers.saveField("icon", opt);
+          }
+        ));
+      }
 
       var allowDirection = opts.allowDirection !== false;
       if (!allowDirection && b.sensor) {
@@ -66,48 +93,50 @@ function sliderTypeFactory(opts) {
         });
       }
 
-      var hasIconOn = b.icon_on && b.icon_on !== "Auto";
-      var iconOnToggle = helpers.toggleRow(opts.iconOnLabel, helpers.idPrefix + "iconon-toggle", hasIconOn);
-      panel.appendChild(iconOnToggle.row);
+      if (!opts.alwaysShowIconPair) {
+        var hasIconOn = b.icon_on && b.icon_on !== "Auto";
+        var iconOnToggle = helpers.toggleRow(opts.iconOnLabel, helpers.idPrefix + "iconon-toggle", hasIconOn);
+        panel.appendChild(iconOnToggle.row);
 
-      var iconOnCond = condField();
-      if (hasIconOn) iconOnCond.classList.add("sp-visible");
+        var iconOnCond = condField();
+        if (hasIconOn) iconOnCond.classList.add("sp-visible");
 
-      var iconOnSection = document.createElement("div");
-      iconOnSection.className = "sp-field";
-      iconOnSection.appendChild(helpers.fieldLabel(opts.iconOnFieldLabel, helpers.idPrefix + "icon-on"));
-      var iconOnVal = hasIconOn ? b.icon_on : "Auto";
-      var iconOnPicker = document.createElement("div");
-      iconOnPicker.className = "sp-icon-picker";
-      iconOnPicker.id = helpers.idPrefix + "icon-on-picker";
-      iconOnPicker.innerHTML =
-        '<span class="sp-icon-picker-preview mdi mdi-' + iconSlug(iconOnVal) + '"></span>' +
-        '<input class="sp-icon-picker-input" id="' + helpers.idPrefix + 'icon-on" type="text" ' +
-        'placeholder="Search icons\u2026" value="' + escAttr(iconOnVal) + '" autocomplete="off">' +
-        '<div class="sp-icon-dropdown"></div>';
-      iconOnSection.appendChild(iconOnPicker);
-      iconOnCond.appendChild(iconOnSection);
+        var iconOnSection = document.createElement("div");
+        iconOnSection.className = "sp-field";
+        iconOnSection.appendChild(helpers.fieldLabel(opts.iconOnFieldLabel, helpers.idPrefix + "icon-on"));
+        var iconOnVal = hasIconOn ? b.icon_on : "Auto";
+        var iconOnPicker = document.createElement("div");
+        iconOnPicker.className = "sp-icon-picker";
+        iconOnPicker.id = helpers.idPrefix + "icon-on-picker";
+        iconOnPicker.innerHTML =
+          '<span class="sp-icon-picker-preview mdi mdi-' + iconSlug(iconOnVal) + '"></span>' +
+          '<input class="sp-icon-picker-input" id="' + helpers.idPrefix + 'icon-on" type="text" ' +
+          'placeholder="Search icons\u2026" value="' + escAttr(iconOnVal) + '" autocomplete="off">' +
+          '<div class="sp-icon-dropdown"></div>';
+        iconOnSection.appendChild(iconOnPicker);
+        iconOnCond.appendChild(iconOnSection);
 
-      initIconPicker(iconOnPicker, iconOnVal, function (opt) {
-        b.icon_on = opt;
-        helpers.saveField("icon_on", opt);
-      });
+        initIconPicker(iconOnPicker, iconOnVal, function (opt) {
+          b.icon_on = opt;
+          helpers.saveField("icon_on", opt);
+        });
 
-      panel.appendChild(iconOnCond);
+        panel.appendChild(iconOnCond);
 
-      iconOnToggle.input.addEventListener("change", function () {
-        if (this.checked) {
-          iconOnCond.classList.add("sp-visible");
-        } else {
-          b.icon_on = "Auto";
-          helpers.saveField("icon_on", "Auto");
-          iconOnCond.classList.remove("sp-visible");
-          var ionPreview = iconOnPicker.querySelector(".sp-icon-picker-preview");
-          if (ionPreview) ionPreview.className = "sp-icon-picker-preview mdi mdi-cog";
-          var ionInput = iconOnPicker.querySelector(".sp-icon-picker-input");
-          if (ionInput) ionInput.value = "Auto";
-        }
-      });
+        iconOnToggle.input.addEventListener("change", function () {
+          if (this.checked) {
+            iconOnCond.classList.add("sp-visible");
+          } else {
+            b.icon_on = "Auto";
+            helpers.saveField("icon_on", "Auto");
+            iconOnCond.classList.remove("sp-visible");
+            var ionPreview = iconOnPicker.querySelector(".sp-icon-picker-preview");
+            if (ionPreview) ionPreview.className = "sp-icon-picker-preview mdi mdi-cog";
+            var ionInput = iconOnPicker.querySelector(".sp-icon-picker-input");
+            if (ionInput) ionInput.value = "Auto";
+          }
+        });
+      }
     },
     renderPreview: function (b, helpers) {
       var label = b.label || b.entity || opts.fallbackLabel;
@@ -149,7 +178,6 @@ registerButtonType("cover", sliderTypeFactory({
   fallbackLabel: "Cover",
   fallbackIcon: "blinds",
   badgeIcon: "blinds-horizontal",
-  iconOnLabel: "Change Icon When Open",
-  iconOnFieldLabel: "Icon When Open",
   allowDirection: false,
+  alwaysShowIconPair: true,
 }));

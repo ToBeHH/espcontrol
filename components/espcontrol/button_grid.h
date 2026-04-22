@@ -1126,9 +1126,30 @@ inline lv_obj_t *setup_slider_widget(lv_obj_t *btn, uint32_t on_color, bool hori
   return slider;
 }
 
+inline bool slider_has_alt_icon(const std::string &type, const std::string &icon_on) {
+  return type == "cover" || (!icon_on.empty() && icon_on != "Auto");
+}
+
+inline const char *slider_icon_off(const std::string &type, const std::string &entity_id,
+                                   const std::string &icon) {
+  if (type == "cover" && (icon.empty() || icon == "Auto"))
+    return find_icon("Blinds");
+  if (icon.empty() || icon == "Auto")
+    return domain_default_icon(entity_id.substr(0, entity_id.find('.')));
+  return find_icon(icon.c_str());
+}
+
+inline const char *slider_icon_on(const std::string &type, const std::string &icon_on) {
+  if (type == "cover" && (icon_on.empty() || icon_on == "Auto"))
+    return find_icon("Blinds Open");
+  return find_icon(icon_on.c_str());
+}
+
 // Full slider button setup: visual + event handlers + HA action on release
 inline void setup_slider_visual(BtnSlot &s, const ParsedCfg &p, uint32_t on_color) {
   setup_toggle_visual(s, p);
+  if (p.type == "cover")
+    lv_label_set_text(s.icon_lbl, slider_icon_off(p.type, p.entity, p.icon));
 
   bool horizontal = p.type == "slider" && p.sensor == "h";
   lv_obj_t *slider = setup_slider_widget(s.btn, on_color, horizontal);
@@ -1182,15 +1203,14 @@ inline void subscribe_slider_state(lv_obj_t *btn_ptr, lv_obj_t *icon_lbl,
   esphome::api::global_api_server->subscribe_home_assistant_state(
     entity_id, {},
     std::function<void(const std::string &)>(
-      [slider, btn_ptr, fill, horiz, inv, rad, icon_lbl, has_icon_on, icon_off, icon_on, is_cover](const std::string &state) {
+      [slider, btn_ptr, fill, horiz, inv, rad, icon_lbl, has_icon_on, icon_off, icon_on](const std::string &state) {
         bool on = is_entity_on(state);
         if (!on) {
           lv_slider_set_value(slider, 0, LV_ANIM_OFF);
           if (fill) slider_update_fill(fill, btn_ptr, inv ? 100 : 0, horiz, inv, rad);
         }
-        if (has_icon_on && !is_cover) {
+        if (has_icon_on)
           lv_label_set_text(icon_lbl, on ? icon_on : icon_off);
-        }
       })
   );
   if (is_cover) {
@@ -1208,7 +1228,7 @@ inline void subscribe_slider_state(lv_obj_t *btn_ptr, lv_obj_t *icon_lbl,
             int fill_pct = inv ? 100 - pct : pct;
             if (fill) slider_update_fill(fill, btn_ptr, fill_pct, horiz, inv, rad);
             if (has_icon_on) {
-              lv_label_set_text(icon_lbl, pct < 100 ? icon_on : icon_off);
+              lv_label_set_text(icon_lbl, pct > 0 ? icon_on : icon_off);
             }
           }
         })
@@ -1287,6 +1307,8 @@ inline lv_obj_t *setup_subpage_slider(lv_obj_t *btn, lv_obj_t *icon_lbl, lv_obj_
   lv_coord_t pad = radius + 4;
   lv_obj_align(icon_lbl, LV_ALIGN_TOP_LEFT, pad, pad);
   lv_obj_align(text_lbl, LV_ALIGN_BOTTOM_LEFT, pad, -pad);
+  if (sb.type == "cover")
+    lv_label_set_text(icon_lbl, slider_icon_off(sb.type, sb.entity, sb.icon));
 
   lv_obj_t *fill = lv_obj_get_child(btn, 0);
   // Intentionally leaked -- lives for the lifetime of the display
@@ -1315,14 +1337,9 @@ inline lv_obj_t *setup_subpage_slider(lv_obj_t *btn, lv_obj_t *icon_lbl, lv_obj_
       send_slider_action(c->entity_id, lv_slider_get_value(s));
   }, LV_EVENT_RELEASED, nullptr);
 
-  bool has_icon_on = !sb.icon_on.empty() && sb.icon_on != "Auto";
-  const char *sl_icon_on = has_icon_on ? find_icon(sb.icon_on.c_str()) : nullptr;
-  const char *sl_icon_off = nullptr;
-  if (has_icon_on) {
-    sl_icon_off = (sb.icon.empty() || sb.icon == "Auto")
-      ? domain_default_icon(sb.entity.substr(0, sb.entity.find('.')))
-      : find_icon(sb.icon.c_str());
-  }
+  bool has_icon_on = slider_has_alt_icon(sb.type, sb.icon_on);
+  const char *sl_icon_on = has_icon_on ? slider_icon_on(sb.type, sb.icon_on) : nullptr;
+  const char *sl_icon_off = has_icon_on ? slider_icon_off(sb.type, sb.entity, sb.icon) : nullptr;
   subscribe_slider_state(btn, icon_lbl, sl, has_icon_on, sl_icon_off, sl_icon_on, sb.entity);
 
   // Intentionally leaked -- lives for the lifetime of the display
@@ -1685,14 +1702,9 @@ inline void grid_phase2(
 
     if (p.type == "slider" || p.type == "cover") {
       lv_obj_t *slider = (lv_obj_t *)lv_obj_get_user_data(s.sensor_container);
-      bool sl_has_icon_on = !p.icon_on.empty() && p.icon_on != "Auto";
-      const char *sl_icon_on_cp = sl_has_icon_on ? find_icon(p.icon_on.c_str()) : nullptr;
-      const char *sl_icon_off_cp = nullptr;
-      if (sl_has_icon_on) {
-        sl_icon_off_cp = (p.icon.empty() || p.icon == "Auto")
-          ? domain_default_icon(p.entity.substr(0, p.entity.find('.')))
-          : find_icon(p.icon.c_str());
-      }
+      bool sl_has_icon_on = slider_has_alt_icon(p.type, p.icon_on);
+      const char *sl_icon_on_cp = sl_has_icon_on ? slider_icon_on(p.type, p.icon_on) : nullptr;
+      const char *sl_icon_off_cp = sl_has_icon_on ? slider_icon_off(p.type, p.entity, p.icon) : nullptr;
       subscribe_slider_state(s.btn, s.icon_lbl, slider,
         sl_has_icon_on, sl_icon_off_cp, sl_icon_on_cp, p.entity);
       if (p.label.empty())

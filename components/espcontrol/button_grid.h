@@ -419,6 +419,10 @@ inline bool garage_state_is_active(const std::string &state) {
   return state == "open" || state == "opening" || state == "closing";
 }
 
+inline bool cover_toggle_state_is_active(const std::string &state) {
+  return state == "closed" || state == "closing";
+}
+
 inline bool garage_state_uses_open_icon(const std::string &state) {
   return state == "open" || state == "opening";
 }
@@ -911,15 +915,18 @@ inline void subscribe_weather_state(lv_obj_t *icon_lbl, lv_obj_t *text_lbl, cons
   );
 }
 
-inline void subscribe_garage_state(lv_obj_t *btn_ptr, lv_obj_t *icon_lbl,
-                                   TransientStatusLabel *status_label,
-                                   const char *closed_icon, const char *open_icon,
-                                   const std::string &entity_id) {
+inline void subscribe_cover_state(lv_obj_t *btn_ptr, lv_obj_t *icon_lbl,
+                                  TransientStatusLabel *status_label,
+                                  const char *closed_icon, const char *open_icon,
+                                  const std::string &entity_id,
+                                  bool closed_is_active) {
   esphome::api::global_api_server->subscribe_home_assistant_state(
     entity_id, {},
     std::function<void(const std::string &)>(
-      [btn_ptr, icon_lbl, status_label, closed_icon, open_icon](const std::string &state) {
-        bool active = garage_state_is_active(state);
+      [btn_ptr, icon_lbl, status_label, closed_icon, open_icon, closed_is_active](const std::string &state) {
+        bool active = closed_is_active
+          ? cover_toggle_state_is_active(state)
+          : garage_state_is_active(state);
         if (active) lv_obj_add_state(btn_ptr, LV_STATE_CHECKED);
         else lv_obj_clear_state(btn_ptr, LV_STATE_CHECKED);
         lv_label_set_text(icon_lbl, garage_state_uses_open_icon(state) ? open_icon : closed_icon);
@@ -927,6 +934,22 @@ inline void subscribe_garage_state(lv_obj_t *btn_ptr, lv_obj_t *icon_lbl,
           status_label, garage_state_label(state), garage_state_releases_label(state));
       })
   );
+}
+
+inline void subscribe_garage_state(lv_obj_t *btn_ptr, lv_obj_t *icon_lbl,
+                                   TransientStatusLabel *status_label,
+                                   const char *closed_icon, const char *open_icon,
+                                   const std::string &entity_id) {
+  subscribe_cover_state(btn_ptr, icon_lbl, status_label,
+    closed_icon, open_icon, entity_id, false);
+}
+
+inline void subscribe_cover_toggle_state(lv_obj_t *btn_ptr, lv_obj_t *icon_lbl,
+                                         TransientStatusLabel *status_label,
+                                         const char *closed_icon, const char *open_icon,
+                                         const std::string &entity_id) {
+  subscribe_cover_state(btn_ptr, icon_lbl, status_label,
+    closed_icon, open_icon, entity_id, true);
 }
 
 // Subscribe to an entity's friendly_name attribute and use it as the button label
@@ -1786,7 +1809,7 @@ inline void grid_phase2(
       if (!p.entity.empty()) {
         TransientStatusLabel *status_label = create_transient_status_label(
           s.text_lbl, p.label.empty() ? "Cover" : p.label);
-        subscribe_garage_state(s.btn, s.icon_lbl, status_label,
+        subscribe_cover_toggle_state(s.btn, s.icon_lbl, status_label,
           slider_icon_off(p.type, p.entity, p.icon), slider_icon_on(p.type, p.icon_on), p.entity);
         if (p.label.empty())
           subscribe_friendly_name(status_label, p.entity);
@@ -2074,7 +2097,7 @@ inline void grid_phase2(
         if (!sb.entity.empty()) {
           TransientStatusLabel *status_label = create_transient_status_label(
             stl, sb.label.empty() ? "Cover" : sb.label);
-          subscribe_garage_state(sb_btn, sil, status_label,
+          subscribe_cover_toggle_state(sb_btn, sil, status_label,
             slider_icon_off(sb.type, sb.entity, sb.icon), slider_icon_on(sb.type, sb.icon_on), sb.entity);
           if (sb.label.empty())
             subscribe_friendly_name(status_label, sb.entity);

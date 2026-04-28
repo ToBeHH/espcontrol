@@ -14,6 +14,105 @@ globals:
   - id: outdoor_temp
     type: float
     initial_value: 'NAN'
+    
+api:
+  actions:
+    - action: update_button
+      variables:
+        index: int
+        entity: string
+        label: string
+        icon: string
+        icon_on: string
+        sensor_entity: string
+        unit: string
+        button_type: string
+        precision: string
+      then:
+        - lambda: |-
+            std::string existing;
+            switch (index) {
+                    case 1: existing = id(button_1_config).state; break;
+                    case 2: existing = id(button_2_config).state; break;
+                    case 3: existing = id(button_3_config).state; break;
+                    case 4: existing = id(button_4_config).state; break;
+                    case 5: existing = id(button_5_config).state; break;
+                    case 6: existing = id(button_6_config).state; break;
+                    case 7: existing = id(button_7_config).state; break;
+                    case 8: existing = id(button_8_config).state; break;
+                    case 9: existing = id(button_9_config).state; break;
+                    case 10: existing = id(button_10_config).state; break;
+                    case 11: existing = id(button_11_config).state; break;
+                    case 12: existing = id(button_12_config).state; break;
+                    case 13: existing = id(button_13_config).state; break;
+                    case 14: existing = id(button_14_config).state; break;
+                    case 15: existing = id(button_15_config).state; break;
+              default:
+                ESP_LOGW("api", "update_button: invalid index %d", index);
+                return;
+            }
+
+            std::string current[8];
+            size_t start = 0;
+            for (int i = 0; i < 7; i++) {
+              size_t sep = existing.find(';', start);
+              if (sep == std::string::npos) {
+                current[i] = existing.substr(start);
+                start = existing.size();
+              } else {
+                current[i] = existing.substr(start, sep - start);
+                start = sep + 1;
+              }
+            }
+            current[7] = (start <= existing.size()) ? existing.substr(start) : "";
+
+            auto merge_field = [](const std::string &incoming, const std::string &stored) -> std::string {
+              if (incoming.empty() || incoming == "null" || incoming == "NULL" || incoming == "undefined" || incoming == "__KEEP__") return stored;
+              if (incoming == "__EMPTY__") return "";
+              return incoming;
+            };
+
+            std::string merged[8];
+            merged[0] = merge_field(entity, current[0]);
+            merged[1] = merge_field(label, current[1]);
+            merged[2] = merge_field(icon, current[2]);
+            merged[3] = merge_field(icon_on, current[3]);
+            merged[4] = merge_field(sensor_entity, current[4]);
+            merged[5] = merge_field(unit, current[5]);
+            merged[6] = merge_field(button_type, current[6]);
+            merged[7] = merge_field(precision, current[7]);
+
+            std::string cfg = merged[0] + ";" + merged[1] + ";" + merged[2] + ";" +
+              merged[3] + ";" + merged[4] + ";" + merged[5] + ";" + merged[6] + ";" + merged[7];
+
+            switch (index) {
+                    case 1: id(button_1_config).publish_state(cfg); break;
+                    case 2: id(button_2_config).publish_state(cfg); break;
+                    case 3: id(button_3_config).publish_state(cfg); break;
+                    case 4: id(button_4_config).publish_state(cfg); break;
+                    case 5: id(button_5_config).publish_state(cfg); break;
+                    case 6: id(button_6_config).publish_state(cfg); break;
+                    case 7: id(button_7_config).publish_state(cfg); break;
+                    case 8: id(button_8_config).publish_state(cfg); break;
+                    case 9: id(button_9_config).publish_state(cfg); break;
+                    case 10: id(button_10_config).publish_state(cfg); break;
+                    case 11: id(button_11_config).publish_state(cfg); break;
+                    case 12: id(button_12_config).publish_state(cfg); break;
+                    case 13: id(button_13_config).publish_state(cfg); break;
+                    case 14: id(button_14_config).publish_state(cfg); break;
+                    case 15: id(button_15_config).publish_state(cfg); break;
+              default:
+                ESP_LOGW("api", "update_button: invalid index %d", index);
+                return;
+            }
+        - logger.log:
+            level: INFO
+            format: "Queued update for button index %d"
+            args: [ 'index' ]
+
+    - action: apply_button_updates
+      then:
+        - button.press: apply_configuration_button
 
 esphome:
   on_boot:

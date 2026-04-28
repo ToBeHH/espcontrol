@@ -19,6 +19,22 @@ Use Action cards for shortcuts such as running a scene, starting a script, press
 5. If you choose **Set Number Helper** or **Select Option Helper**, enter the value or option.
 6. Choose an **Icon**.
 
+## Run an Existing Home Assistant Script
+
+Use **Run Script** when you already have a Home Assistant script and want a card to run it directly. This avoids creating a separate automation just to connect the panel button to the script.
+
+For example, to run a script called `script.mettre_de_la_musique`:
+
+1. Set the card **Type** to **Action**.
+2. Set **Action** to **Run Script**.
+3. Set **Entity ID** to `script.mettre_de_la_musique`.
+4. Set **Label** to the text you want on the panel, such as `Music`.
+5. Choose an icon.
+
+When you tap the card, Espcontrol sends `script.turn_on` to Home Assistant with that script as the target entity. The label is only what appears on the panel, so it can be different from the script name.
+
+Action cards do not currently pass script variables or extra data. If a script needs inputs, handle those inside the Home Assistant script, or create a small wrapper script in Home Assistant and point the Action card at that wrapper.
+
 ## Supported Actions
 
 | Action | Example entity | Extra field |
@@ -44,6 +60,8 @@ When you tap an Action card:
 ## When to Use a Scene or Script
 
 If you want a shortcut that does several things, create a scene or script in Home Assistant first, then point the Action card at that scene or script. This keeps the panel setup simple and makes the behaviour easier to test inside Home Assistant.
+
+Use an [Action](/card-types/actions) card when the panel should directly run something that already exists in Home Assistant. Use a [Trigger](/card-types/buttons) card when you want the panel to fire a custom event that a Home Assistant automation responds to.
 
 Use the dedicated card types for richer controls:
 

@@ -36,7 +36,7 @@ You only need to do this once per device. The setting persists across firmware u
 
 ## What If I Skip This?
 
-You won't be able to control any devices, it will be in a read only state, and entities such as lights, switches, and scenes, won't do anything when tapped.
+You won't be able to control any devices, it will be in a read only state, and entities such as lights, switches, scenes, scripts, and helpers won't do anything when tapped.
 
 ## Device Not Showing Up?
 
